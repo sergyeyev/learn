@@ -79,6 +79,80 @@ int list2_count(list2 *list) {
 	return result;
  };
 
+
+void list2_swap(list2 *item1, list2 *item2) {
+	if ( (NULL == item1) || (NULL == item2) ) {
+		return;
+	}
+	if ( (item1->next == item2) && (item2->prev == item1) ) { // рядом стоящие элементы
+		list2 *next0 = item2->next;
+		list2 *prev0 = item1->prev;
+		item1->next = next0;
+		item1->prev = item2;
+		item2->next = item1;
+		item2->prev = prev0;
+		if (NULL != next0) {
+			next0->prev = item1;
+		}
+		if (NULL != prev0) {
+			prev0->next = item2;
+		}
+	}else if ((item2->next == item1) && (item1->prev == item2)) { // рядом стоящие элементы
+		list2 *next0 = item1->next;
+		list2 *prev0 = item2->prev;
+		item1->next = item2;
+		item1->prev = prev0;
+		item2->next = next0;
+		item2->prev = item1;
+		if (NULL != next0) {
+			next0->prev = item2;
+		}
+		if (NULL != prev0) {
+			prev0->next = item1;
+		}
+	}else { // отстоящие друг от друга элементы
+		list2 *next2 = item1->next;
+		list2 *prev2 = item1->prev;
+		item1->next = item2->next;
+		item1->prev = item2->prev;
+		item2->next = next2;
+		item2->prev = prev2;
+		if (NULL != item1->next) {
+			item1->next->prev = item1;
+		}
+		if (NULL != item1->prev) {
+			item1->prev->next = item1;
+		}
+		if (NULL != item2->next) {
+			item2->next->prev = item2;
+		}
+		if (NULL != item2->prev) {
+			item2->prev->next = item2;
+		}
+	}
+}
+
+void list2_sortby_y(list2 *list) {
+	int swapCount = 0;
+	list2 *p = NULL;
+	do {
+		swapCount = 0;
+		p = list2_gotofirst(list);
+//		printf("----------------------------\n");
+//		list2_printtext(p);
+		while (NULL != p) {
+			if (NULL != p->next) {
+				if (p->geom->getY() > p->next->geom->getY()) {
+					list2_swap(p, p->next);
+					swapCount++;
+				}
+			}
+			p = p->next;
+		}
+//		printf("========================================================  %5d\n", swapCount);
+	} while (swapCount != 0);
+}
+
 void list2_print(list2 *list) {
  	list2 *item = list2_gotofirst(list);
 	while (NULL != item) {
@@ -88,6 +162,16 @@ void list2_print(list2 *list) {
 		item = item->next;
 	}
  };
+
+void list2_printtext(list2 *list) {
+	list2 *item = list2_gotofirst(list);
+	while (NULL != item) {
+		if (NULL != item->geom) {
+			item->geom->PrintText();
+		}
+		item = item->next;
+	}
+};
 
 void list2_clear(list2 *list) {
 	list2 *item = list2_gotolast(list);

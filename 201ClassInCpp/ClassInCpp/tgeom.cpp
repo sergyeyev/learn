@@ -96,6 +96,12 @@ void TGeom::Print() {
 	printf("%c", getSymb() );
 }
 
+void TGeom::PrintText() {
+	consoleSetColors(getBgColor(), clBlack);
+	printf("  %d [%3d:%3d] %s\n", id, x, y, name);
+}
+
+
 void TGeom::Erase() {
 	consoleSetColors(clBlack, clBlack);
 	consoleGotoXY(getX(), getY());

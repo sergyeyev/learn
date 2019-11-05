@@ -26,6 +26,7 @@ public:
 	virtual int Contains(const short X, const short Y);
 	virtual void InitTest();
 	virtual void Print();
+	virtual void PrintText();
 	virtual void Erase();
 	virtual void SaveToFile(FILE *fileHandle);
 	virtual int LoadFromStr(char *buffer);
