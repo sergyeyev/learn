@@ -15,7 +15,6 @@ enum TPointType {
 
 class TPoint :public TGeom {
 private:
-	TPointType typ;
 public:
 	TPoint();
 	virtual TPointType getTyp();
@@ -23,6 +22,8 @@ public:
 	virtual char getSymb();
 	virtual void SaveToFile(FILE *fileHandle);
 	virtual int LoadFromStr(char *buffer);
+protected:
+	TPointType typ;
 };
 
 #endif

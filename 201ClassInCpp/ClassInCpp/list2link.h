@@ -19,6 +19,8 @@ int list2_count(list2 *list);
 int list2_savetofile(list2 *list, const char *filename);
 list2 *list2_loadfromfile(list2 *list, const char *filename);
 int list2_contains(list2 *map, short x, short y);
-list2 *list2_findmap(list2 *map, short x, short y);
+list2 *list2_findxy(list2 *map, short x, short y);
+
+
 
 #endif

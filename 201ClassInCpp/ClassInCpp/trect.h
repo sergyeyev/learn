@@ -5,8 +5,6 @@
 
 class TRect :public TGeom {
 private:
-	short height;
-	short width;
 public:
 	TRect();
 	virtual ~TRect();
@@ -21,6 +19,9 @@ public:
 	virtual void Erase();
 	virtual void SaveToFile(FILE *fileHandle);
 	virtual int LoadFromStr(char *buffer);
+protected:
+	short height;
+	short width;
 };
 
 #endif

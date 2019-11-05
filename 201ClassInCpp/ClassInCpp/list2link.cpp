@@ -173,15 +173,14 @@ int list2_contains(list2 *map, short x, short y) {
 	}
 	return 0;
 };
-list2 *list2_findmap(list2 *map, short x, short y) {
+
+list2 *list2_findxy(list2 *map, short x, short y) {
 	list2 *item = list2_gotofirst(map);
 	while (NULL != item) {
 		if (1 == item->geom->Contains(x, y)) {
-			
 			return item;
 		}
-		 item = item->next;
+		item = item->next;
 	}
 	return NULL;
-
 };

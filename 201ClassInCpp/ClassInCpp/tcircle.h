@@ -5,7 +5,6 @@
 
 class TCircle :public TGeom {
 private:
-	short r;
 public:
 	TCircle();
 	virtual ~TCircle();
@@ -17,6 +16,8 @@ public:
 	virtual void Erase();
 	virtual void SaveToFile(FILE *fileHandle);
 	virtual int LoadFromStr(char *buffer);
+protected:
+	short r;
 };
 
 #endif

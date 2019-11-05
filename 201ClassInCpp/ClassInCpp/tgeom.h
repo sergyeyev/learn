@@ -8,11 +8,6 @@
 
 class TGeom {
 private:
-	char   symb;
-	short  x;
-	short  y;
-	ConsoleColors color;
-	ConsoleColors bgcolor;
 public:
 	int    id;
 	char   *name;
@@ -35,6 +30,11 @@ public:
 	virtual void SaveToFile(FILE *fileHandle);
 	virtual int LoadFromStr(char *buffer);
 protected:
+	char   symb;
+	short  x;
+	short  y;
+	ConsoleColors color;
+	ConsoleColors bgcolor;
 };
 
 #endif
