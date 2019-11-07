@@ -132,27 +132,6 @@ void list2_swap(list2 *item1, list2 *item2) {
 	}
 }
 
-void list2_sortby_y(list2 *list) {
-	int swapCount = 0;
-	list2 *p = NULL;
-	do {
-		swapCount = 0;
-		p = list2_gotofirst(list);
-//		printf("----------------------------\n");
-//		list2_printtext(p);
-		while (NULL != p) {
-			if (NULL != p->next) {
-				if (p->geom->getY() > p->next->geom->getY()) {
-					list2_swap(p, p->next);
-					swapCount++;
-				}
-			}
-			p = p->next;
-		}
-//		printf("========================================================  %5d\n", swapCount);
-	} while (swapCount != 0);
-}
-
 void list2_print(list2 *list) {
  	list2 *item = list2_gotofirst(list);
 	while (NULL != item) {
@@ -268,3 +247,37 @@ list2 *list2_findxy(list2 *map, short x, short y) {
 	}
 	return NULL;
 };
+
+void list2_sortby_y(list2 *list) {
+	int swapCount = 0;
+	list2 *p = NULL;
+	do {
+		swapCount = 0;
+		p = list2_gotofirst(list);
+		while (NULL != p) {
+			if (NULL != p->next) {
+				if (p->geom->getY() > p->next->geom->getY()) {
+					list2_swap(p, p->next);
+					swapCount++;
+				}
+			}
+			p = p->next;
+		}
+	} while (swapCount != 0);
+}
+
+void list2_sortby_name(list2 *list) {
+
+}
+
+void list2_search_name(list2 *list, char *searchStr) {
+	list2 *item = list2_gotofirst(list);
+	while (NULL != item) {
+		if (NULL != item->geom) {
+			if ( NULL != strstr(item->geom->nameupper, searchStr) ) {
+				item->geom->PrintText();
+			}
+		}
+		item = item->next;
+	}
+}

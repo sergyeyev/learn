@@ -11,6 +11,14 @@ void nullStr(char *str, int count) {
 	}
 }
 
+void strtoupper(char *str) {
+	char *s = str;
+	for (int i = 0; i < strlen(str); i++) {
+		*s = toupper(*s);
+		s++;
+	}
+}
+
 char *parseItem(char *fromChar, const char delimiter, char *parsedItem) {
 	nullStr(parsedItem, defaultNameLength);
 	char *result = NULL;

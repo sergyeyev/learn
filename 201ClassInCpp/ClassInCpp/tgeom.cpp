@@ -7,17 +7,21 @@
 #include "consoleroutine.h"
 
 TGeom::TGeom() {
-	x       = 0;
-	y       = 0;
-	symb    = ' ';
-	name    = (char *)malloc( defaultNameLength * sizeof(char) );
-	color   = clBlack;
-	bgcolor = clBlack;
+	x         = 0;
+	y         = 0;
+	symb      = ' ';
+	name      = (char *)malloc( defaultNameLength * sizeof(char) );
+	nameupper = (char *)malloc( defaultNameLength * sizeof(char) );
+	color     = clBlack;
+	bgcolor   = clBlack;
+	nullStr(name, defaultNameLength);
+	nullStr(nameupper, defaultNameLength);
 }
 
 TGeom::~TGeom() {
 	Erase();
-//	free(name);
+	free(name);
+	free(nameupper);
 }
 
 int TGeom::getX() {
@@ -132,6 +136,8 @@ int TGeom::LoadFromStr(char *buffer) {
 	parser = parseItem(parser, '|', p_block); bgcolor = (ConsoleColors)atoi(p_block);
 	parser = parseItem(parser, '|', p_block); symb    = *p_block;
 	parser = parseItem(parser, '\n', p_block); strcpy_s(name, strlen(p_block)+1, p_block);
+	strcpy_s(nameupper, strlen(p_block) + 1, p_block);
+	strtoupper(nameupper);
 	free(p_block);
 	return result;
 }

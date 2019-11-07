@@ -10,6 +10,7 @@ TPoint::TPoint() {
 	TGeom::TGeom();
 	setSymb('.');
 	strcpy_s(name, defaultNameLength, "TPoint");
+	strcpy_s(nameupper, defaultNameLength, name);
 }
 
 TPointType TPoint::getTyp() {
@@ -53,6 +54,8 @@ int TPoint::LoadFromStr(char *buffer) {
 	parser = parseItem(parser, '|', p_block); symb    = *p_block;
 	parser = parseItem(parser, '|', p_block); typ     = (TPointType)atoi(p_block);
 	parser = parseItem(parser, '\n', p_block); strcpy_s(name, strlen(p_block) + 1, p_block);
+	strcpy_s(nameupper, strlen(p_block) + 1, p_block);
+	strtoupper(nameupper);
 	free(p_block);
 	return result;
 }

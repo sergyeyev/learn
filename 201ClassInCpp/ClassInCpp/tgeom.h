@@ -11,6 +11,7 @@ private:
 public:
 	int    id;
 	char   *name;
+	char   *nameupper;
 	TGeom();
 	virtual ~TGeom();
 	virtual int getX();

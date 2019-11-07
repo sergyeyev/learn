@@ -23,6 +23,8 @@ int list2_contains(list2 *map, short x, short y);
 list2 *list2_findxy(list2 *map, short x, short y);
 void list2_swap(list2 *item1, list2 *item2);
 void list2_sortby_y(list2 *list);
+void list2_sortby_name(list2 *list);
+void list2_search_name(list2 *list, char *searchStr);
 
 
 
