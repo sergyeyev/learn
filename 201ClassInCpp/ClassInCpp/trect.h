@@ -1,6 +1,5 @@
 #ifndef TRECT_H
 #define TRECT_H
-
 #include "tgeom.h"
 
 class TRect :public TGeom {

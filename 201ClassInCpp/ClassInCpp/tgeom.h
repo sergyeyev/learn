@@ -8,6 +8,7 @@
 
 class TGeom {
 private:
+
 public:
 	int    id;
 	char   *name;

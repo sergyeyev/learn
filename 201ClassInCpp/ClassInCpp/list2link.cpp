@@ -196,6 +196,9 @@ list2 *list2_loadfromfile(list2 *list, const char *filename) {
 				}else if (0 == strcmp(objname, "TCIRC")) {
 					item->geom = new TCircle();
 				}
+
+				
+
 				if (NULL != item->geom) {
 					item->geom->LoadFromStr(buffer);
 				}
@@ -275,6 +278,19 @@ void list2_search_name(list2 *list, char *searchStr) {
 	while (NULL != item) {
 		if (NULL != item->geom) {
 			if ( NULL != strstr(item->geom->nameupper, searchStr) ) {
+				item->geom->PrintText();
+			}
+		}
+		item = item->next;
+	}
+}
+
+void list2_search_nametype(list2 *list, char *searchStr, TPointType t) {
+	list2 *item = list2_gotofirst(list);
+	while (NULL != item) {
+		if (NULL != item->geom) {
+			TPoint *p = (TPoint *)item->geom;
+			if( (NULL != strstr(p->nameupper, searchStr)) && (p->getTyp() == t) ) {
 				item->geom->PrintText();
 			}
 		}

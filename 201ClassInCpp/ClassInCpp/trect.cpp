@@ -24,15 +24,14 @@ void TRect::InitTest() {
 };
 
 void TRect::setBounds(const short X, const short Y, const short HEIGHT, const short WIDTH) {
-	setX(X);
-	setY(Y);
+	x      = X;
+	y      = Y;
 	height = HEIGHT;
 	width  = WIDTH;
 }
 
 short TRect::getHeight() {
 	return height;
-  
 };
 
 void  TRect::setHeight(const short HEIGHT) {

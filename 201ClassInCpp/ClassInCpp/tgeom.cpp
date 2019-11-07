@@ -82,7 +82,7 @@ void TGeom::setBgColor(const ConsoleColors BGCOLOR) {
 void TGeom::InitTest() {
 	x = rand() % consoleSizeX() + 1;
 	y = rand() % consoleSizeY() + 1;
-	symb = '?';
+	symb    = '?';
 	color   = (ConsoleColors)(rand() % 16);
 	bgcolor = color;
 	int namelen = rand() % defaultNameLength + 1;

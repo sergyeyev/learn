@@ -1,6 +1,8 @@
 #ifndef LIST2LINK_H
 #define LIST2LINK_H
+
 #include "tgeom.h"
+#include "tpoint.h"
 
 struct list2 {
 	TGeom *geom;
@@ -25,7 +27,6 @@ void list2_swap(list2 *item1, list2 *item2);
 void list2_sortby_y(list2 *list);
 void list2_sortby_name(list2 *list);
 void list2_search_name(list2 *list, char *searchStr);
-
-
+void list2_search_nametype(list2 *list, char *searchStr, TPointType t);
 
 #endif
