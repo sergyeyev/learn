@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameTank", "GameTank\GameTa
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "List2LinkConsole", "List2LinkConsole\List2LinkConsole.vcxproj", "{F10706C3-CFE4-400E-8E27-0AC6621059FD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameTankObj", "GameTankObj\GameTankObj.vcxproj", "{28BD1BF9-C7C8-4F36-8E2D-434D27AE0F53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +53,14 @@ Global
 		{F10706C3-CFE4-400E-8E27-0AC6621059FD}.Release|x64.Build.0 = Release|x64
 		{F10706C3-CFE4-400E-8E27-0AC6621059FD}.Release|x86.ActiveCfg = Release|Win32
 		{F10706C3-CFE4-400E-8E27-0AC6621059FD}.Release|x86.Build.0 = Release|Win32
+		{28BD1BF9-C7C8-4F36-8E2D-434D27AE0F53}.Debug|x64.ActiveCfg = Debug|x64
+		{28BD1BF9-C7C8-4F36-8E2D-434D27AE0F53}.Debug|x64.Build.0 = Debug|x64
+		{28BD1BF9-C7C8-4F36-8E2D-434D27AE0F53}.Debug|x86.ActiveCfg = Debug|Win32
+		{28BD1BF9-C7C8-4F36-8E2D-434D27AE0F53}.Debug|x86.Build.0 = Debug|Win32
+		{28BD1BF9-C7C8-4F36-8E2D-434D27AE0F53}.Release|x64.ActiveCfg = Release|x64
+		{28BD1BF9-C7C8-4F36-8E2D-434D27AE0F53}.Release|x64.Build.0 = Release|x64
+		{28BD1BF9-C7C8-4F36-8E2D-434D27AE0F53}.Release|x86.ActiveCfg = Release|Win32
+		{28BD1BF9-C7C8-4F36-8E2D-434D27AE0F53}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

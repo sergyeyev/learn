@@ -31,6 +31,9 @@
 #define KEY_F7        65
 #define KEY_F8        66
 #define KEY_F9        67
+#define KEY_F10       68
+#define KEY_F11       69
+#define KEY_F12       70
 
 enum ConsoleColors {      // LRGB LRGB    Light Reg Green Blue 
 	clBlack = 0  // 0000 0000
