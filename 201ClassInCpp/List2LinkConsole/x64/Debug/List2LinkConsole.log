@@ -1,0 +1,31 @@
+﻿  pch.cpp
+  consoleroutine.cpp
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.h(34): warning C4005: 'KEY_F9': macro redefinition
+  c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.h(33): note: see previous definition of 'KEY_F9'
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.cpp(15): warning C4805: '==': unsafe mix of type 'bool' and type 'BOOL' in operation
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.cpp(25): warning C4805: '==': unsafe mix of type 'bool' and type 'BOOL' in operation
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.cpp(36): warning C4805: '==': unsafe mix of type 'bool' and type 'BOOL' in operation
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.cpp(47): warning C4805: '==': unsafe mix of type 'bool' and type 'BOOL' in operation
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.cpp(58): warning C4805: '==': unsafe mix of type 'bool' and type 'BOOL' in operation
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.cpp(69): warning C4805: '==': unsafe mix of type 'bool' and type 'BOOL' in operation
+  list2link.cpp
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.h(34): warning C4005: 'KEY_F9': macro redefinition
+  c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.h(33): note: see previous definition of 'KEY_F9'
+  strutils.cpp
+  tcircle.cpp
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.h(34): warning C4005: 'KEY_F9': macro redefinition
+  c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.h(33): note: see previous definition of 'KEY_F9'
+  tgeom.cpp
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.h(34): warning C4005: 'KEY_F9': macro redefinition
+  c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.h(33): note: see previous definition of 'KEY_F9'
+  tpoint.cpp
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.h(34): warning C4005: 'KEY_F9': macro redefinition
+  c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.h(33): note: see previous definition of 'KEY_F9'
+  trect.cpp
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.h(34): warning C4005: 'KEY_F9': macro redefinition
+  c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.h(33): note: see previous definition of 'KEY_F9'
+  List2LinkConsole.cpp
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.h(34): warning C4005: 'KEY_F9': macro redefinition
+  c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.h(33): note: see previous definition of 'KEY_F9'
+  Generating Code...
+  List2LinkConsole.vcxproj -> C:\Users\Filliny\Source\Repos\sergyeyev\learn\201ClassInCpp\x64\Debug\List2LinkConsole.exe
