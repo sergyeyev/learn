@@ -16,7 +16,7 @@ GameEngine::GameEngine() {
 	
 	Console = new TRect();
 	Console->setBounds(1, 1, consoleSizeY() - 2, consoleSizeX() - 2);
-	
+	TGeom *boom = NULL;
 	Tank = new TPoint();
 	Tank->setX(Console->getX() + Console->getWidth()  / 2);
 	Tank->setY(Console->getY() + Console->getHeight() / 2);
@@ -24,7 +24,7 @@ GameEngine::GameEngine() {
 	Tank->setColor(clBlack);
 	Tank->setBgColor(clLightRed);
 
-	Map = list2_loadfromfile(NULL, "d:\\map3.txt");
+	Map = list2_loadfromfile(NULL, "g:\\Map3.txt");
 };
 
 GameEngine::~GameEngine() {
@@ -50,11 +50,19 @@ void GameEngine::doRunBefore() {
 };
 
 void GameEngine::doRunAfter() {
+
+
 };
 
 void GameEngine::doProcessKeyBefore() {
 	Tank->Print();
 	consoleGotoXY(Tank->getX(), Tank->getY() );
+
+	if (NULL != boom) {
+		delete boom;
+		boom = NULL;
+	}
+
 };
 
 void GameEngine::doProcessKeyAfter() {
@@ -113,10 +121,70 @@ void GameEngine::doKeyDown() {
 };
 
 void GameEngine::doKeyF1() {
+	boom = new TCircle();
+	boom->setBgColor(clLightMagenta);
+	boom->setColor(clBlack);
+	boom->setX(Tank->getX());
+	boom->setY(Tank->getY());
+	TCircle *boom1 = (TCircle *)boom;
+	boom1->setR(20);
+	boom1->PrintSlowBoom();
+	list2 *p = list2_gotofirst(Map);
+	while (NULL != p) {
+		if (1 == boom->Contains(p->geom->getX(), p->geom->getY())) {
+			list2 *ptemp = p->next;
+			if (p == list2_gotofirst(Map)) {
+				Map = list2_gotolast(Map);
+			}
+			if (p == list2_gotolast(Map)) {
+				Map = list2_gotofirst(Map);
+			}
+			if (1 == list2_count(Map)) {
+				Map = NULL;
+			}
+			/*if (p == wasOnObject) {
+				wasOnObject = NULL;
+			}*/
+			list2_del(p);
+			p = ptemp;
+		}
+		else {
+			p = p->next;
+		}
+	}
 
 };
 
 void GameEngine::doKeyF2() {
+	boom = new TRect();
+	boom->setBgColor(clLightMagenta);
+	boom->setColor(clBlack);
+	TRect *boom1 = (TRect *)boom;
+	boom1->setBounds(Tank->getX() - 30, Tank->getY() - 20, 40, 60);
+	boom->Print();
+	list2 *p = list2_gotofirst(Map);
+	while (NULL != p) {
+		if (1 == boom->Contains(p->geom->getX(), p->geom->getY())) {
+			list2 *ptemp = p->next;
+			if (p == list2_gotofirst(Map)) {
+				Map = list2_gotolast(Map);
+			}
+			if (p == list2_gotolast(Map)) {
+				Map = list2_gotofirst(Map);
+			}
+			if (1 == list2_count(Map)) {
+				Map = NULL;
+			}
+			//if (p == wasOnObject) {
+			//	wasOnObject = NULL;
+			//}
+			list2_del(p);
+			p = ptemp;
+		}
+		else {
+			p = p->next;
+		}
+	}
 
 };
 

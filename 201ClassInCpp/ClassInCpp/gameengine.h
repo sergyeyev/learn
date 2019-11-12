@@ -15,6 +15,7 @@ class GameEngine {
 private:
 	int Running;
 public:
+	TGeom *boom;
 	TRect *Console;
 	TPoint *Tank;
 	list2 *Map;
