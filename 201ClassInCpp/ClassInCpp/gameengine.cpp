@@ -115,8 +115,8 @@ void GameEngine::doKeyLeft() {
 };
 
 void GameEngine::doKeyRight() {
-	if (NULL != onKeyLeft) {
-		onKeyLeft(this);
+	if (NULL != onKeyRight) {
+		onKeyRight(this);
 	}
 
 	//if( (Tank->getX() < Console->getWidth()) && (1 != list2_contains(Map, Tank->getX() + 1, Tank->getY()))) {
@@ -153,48 +153,60 @@ void GameEngine::doKeyF1() {
 };
 
 void GameEngine::doKeyF2() {
-	boom = new TRect();
-	boom->setBgColor(clLightMagenta);
-	boom->setColor(clBlack);
-	TRect *boom1 = (TRect *)boom;
-	boom1->setBounds(Tank->getX() - 30, Tank->getY() - 20, 40, 60);
-	boom->Print();
-	list2 *p = list2_gotofirst(Map);
-	while (NULL != p) {
-		if (1 == boom->Contains(p->geom->getX(), p->geom->getY())) {
-			list2 *ptemp = p->next;
-			if (p == list2_gotofirst(Map)) {
-				Map = list2_gotolast(Map);
-			}
-			if (p == list2_gotolast(Map)) {
-				Map = list2_gotofirst(Map);
-			}
-			if (1 == list2_count(Map)) {
-				Map = NULL;
-			}
-			//if (p == wasOnObject) {
-			//	wasOnObject = NULL;
-			//}
-			list2_del(p);
-			p = ptemp;
-		}
-		else {
-			p = p->next;
-		}
+	if (NULL != onKeyF2) {
+		onKeyF2(this);
 	}
+
+
+	//boom = new TRect();
+	//boom->setBgColor(clLightMagenta);
+	//boom->setColor(clBlack);
+	//TRect *boom1 = (TRect *)boom;
+	//boom1->setBounds(Tank->getX() - 30, Tank->getY() - 20, 40, 60);
+	//boom->Print();
+	//list2 *p = list2_gotofirst(Map);
+	//while (NULL != p) {
+	//	if (1 == boom->Contains(p->geom->getX(), p->geom->getY())) {
+	//		list2 *ptemp = p->next;
+	//		if (p == list2_gotofirst(Map)) {
+	//			Map = list2_gotolast(Map);
+	//		}
+	//		if (p == list2_gotolast(Map)) {
+	//			Map = list2_gotofirst(Map);
+	//		}
+	//		if (1 == list2_count(Map)) {
+	//			Map = NULL;
+	//		}
+	//		//if (p == wasOnObject) {
+	//		//	wasOnObject = NULL;
+	//		//}
+	//		list2_del(p);
+	//		p = ptemp;
+	//	}
+	//	else {
+	//		p = p->next;
+	//	}
+	//}
 
 };
 
 void GameEngine::doKeyF3() {
-
+	if (NULL != onKeyF3) {
+		onKeyF3(this);
+	}
 };
 
 void GameEngine::doKeyF4() {
+	if (NULL != onKeyF4) {
+		onKeyF4(this);
+	}
 
 };
 
 void GameEngine::doKeyF5() {
-
+	if (NULL != onKeyF5) {
+		onKeyF5(this);
+	}
 };
 
 void GameEngine::doKeyF6() {

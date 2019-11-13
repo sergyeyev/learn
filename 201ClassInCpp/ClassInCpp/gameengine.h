@@ -23,9 +23,13 @@ class GameEngine {
 
 	typedef void(*funcOnKeyEscape)(GameEngine *Sender, int _Running);
 	typedef void(*funcOnKeyDelete)(GameEngine *Sender);
+	typedef void(*funcOnKeyF1)(GameEngine *Sender);
+	typedef void(*funcOnKeyF2)(GameEngine *Sender);
+	typedef void(*funcOnKeyF3)(GameEngine *Sender);
+	typedef void(*funcOnKeyF4)(GameEngine *Sender);
+	typedef void(*funcOnKeyF5)(GameEngine *Sender);
 	typedef void(*funcOnKeyF6)(GameEngine *Sender);
 	
-
 private:
 	int Running;
 
@@ -47,9 +51,13 @@ public:
 	funcOnKeyRight onKeyRight;
 	funcOnKeyUp onKeyUp	;
 	funcOnKeyDown onKeyDown;
-	funcOnKeyF1 onKeyF1;
 	funcOnKeyDelete onKeyDelete;
 	funcOnKeyEscape onKeyEscape;
+	funcOnKeyF1 onKeyF1;
+	funcOnKeyF2 onKeyF2;
+	funcOnKeyF3 onKeyF3;
+	funcOnKeyF4 onKeyF4;
+	funcOnKeyF5 onKeyF5;
 	funcOnKeyF6 onKeyF6;
 	
 
