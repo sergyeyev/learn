@@ -13,7 +13,15 @@
 
 GameEngine::GameEngine() {
 	Running = 0;
-	
+
+	onKeyLeft = NULL;
+	onKeyRight = NULL;
+	onKeyUp = NULL;
+	onKeyDown = NULL;
+	onKeyF1 = NULL;
+	onKeyDelete = NULL;
+	onKeyF6 = NULL;
+	;
 	Console = new TRect();
 	Console->setBounds(1, 1, consoleSizeY() - 2, consoleSizeX() - 2);
 	TGeom *boom = NULL;
@@ -24,7 +32,7 @@ GameEngine::GameEngine() {
 	Tank->setColor(clBlack);
 	Tank->setBgColor(clLightRed);
 
-	Map = list2_loadfromfile(NULL, "g:\\Map3.txt");
+	//Map = list2_loadfromfile(NULL, "g:\\Map3.txt");
 };
 
 GameEngine::~GameEngine() {
@@ -97,61 +105,50 @@ void GameEngine::doKeyEscape() {
 };
 
 void GameEngine::doKeyLeft() {
-	if ( (Tank->getX() > Console->getX()) && (1 != list2_contains(Map, Tank->getX() - 1, Tank->getY()) ) ) {
-		Tank->setX(Tank->getX() - 1);
+	if (NULL != onKeyLeft) {
+		onKeyLeft(this);
 	}
+
+	/*if ( (Tank->getX() > Console->getX()) && (1 != list2_contains(Map, Tank->getX() - 1, Tank->getY()) ) ) {
+		Tank->setX(Tank->getX() - 1);
+	}*/
 };
 
 void GameEngine::doKeyRight() {
-	if( (Tank->getX() < Console->getWidth()) && (1 != list2_contains(Map, Tank->getX() + 1, Tank->getY()))) {
-		Tank->setX(Tank->getX() + 1);
+	if (NULL != onKeyLeft) {
+		onKeyLeft(this);
 	}
+
+	//if( (Tank->getX() < Console->getWidth()) && (1 != list2_contains(Map, Tank->getX() + 1, Tank->getY()))) {
+	//	Tank->setX(Tank->getX() + 1);
+	//}
 };
 
 void GameEngine::doKeyUp() {
-	if( (Tank->getY() > Console->getY()) && (1 != list2_contains(Map, Tank->getX(), Tank->getY()-1))) {
-		Tank->setY(Tank->getY() - 1);
+	if (NULL != onKeyUp) {
+		onKeyUp(this);
 	}
+
+	//if( (Tank->getY() > Console->getY()) && (1 != list2_contains(Map, Tank->getX(), Tank->getY()-1))) {
+	//	Tank->setY(Tank->getY() - 1);
+	//}
 };
 
 void GameEngine::doKeyDown() {
-	if( (Tank->getY() < Console->getHeight()) && (1 != list2_contains(Map, Tank->getX(), Tank->getY() + 1))) {
-		Tank->setY(Tank->getY() + 1);
+	if (NULL != onKeyDown) {
+		onKeyDown(this);
 	}
+
+	//if( (Tank->getY() < Console->getHeight()) && (1 != list2_contains(Map, Tank->getX(), Tank->getY() + 1))) {
+	//	Tank->setY(Tank->getY() + 1);
+	//}
 };
 
 void GameEngine::doKeyF1() {
-	boom = new TCircle();
-	boom->setBgColor(clLightMagenta);
-	boom->setColor(clBlack);
-	boom->setX(Tank->getX());
-	boom->setY(Tank->getY());
-	TCircle *boom1 = (TCircle *)boom;
-	boom1->setR(20);
-	boom1->PrintSlowBoom();
-	list2 *p = list2_gotofirst(Map);
-	while (NULL != p) {
-		if (1 == boom->Contains(p->geom->getX(), p->geom->getY())) {
-			list2 *ptemp = p->next;
-			if (p == list2_gotofirst(Map)) {
-				Map = list2_gotolast(Map);
-			}
-			if (p == list2_gotolast(Map)) {
-				Map = list2_gotofirst(Map);
-			}
-			if (1 == list2_count(Map)) {
-				Map = NULL;
-			}
-			/*if (p == wasOnObject) {
-				wasOnObject = NULL;
-			}*/
-			list2_del(p);
-			p = ptemp;
-		}
-		else {
-			p = p->next;
-		}
+	if (NULL != onKeyF1) {
+		onKeyF1(this);
 	}
+
 
 };
 
@@ -201,7 +198,9 @@ void GameEngine::doKeyF5() {
 };
 
 void GameEngine::doKeyF6() {
-
+	if (NULL != onKeyF6) {
+		onKeyF6(this);
+	}
 };
 
 void GameEngine::doKeyF7() {
@@ -236,4 +235,19 @@ void GameEngine::setRunning(const int value) {
 	if (value != Running) {
 		Running = value;
 	}
-};
+}
+
+list2 * GameEngine::Map_add_TPoint(list2 * Map, short x, short y, TPointType t, ConsoleColors color, ConsoleColors bgcolor)
+{
+	TPoint *p = new TPoint();
+	p->setX(x);
+	p->setY(y);
+	p->setColor(color);
+	p->setBgColor(bgcolor);
+	p->setTyp(t);
+
+	list2 *result = list2_ins(Map);
+	result->geom = p;
+	return result;
+}
+
