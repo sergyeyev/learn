@@ -1,17 +1,1 @@
-﻿  pch.cpp
-  consoleroutine.cpp
-d:\projects\c\learn\201classincpp\classincpp\consoleroutine.cpp(15): warning C4805: '==': unsafe mix of type 'bool' and type 'BOOL' in operation
-d:\projects\c\learn\201classincpp\classincpp\consoleroutine.cpp(25): warning C4805: '==': unsafe mix of type 'bool' and type 'BOOL' in operation
-d:\projects\c\learn\201classincpp\classincpp\consoleroutine.cpp(36): warning C4805: '==': unsafe mix of type 'bool' and type 'BOOL' in operation
-d:\projects\c\learn\201classincpp\classincpp\consoleroutine.cpp(47): warning C4805: '==': unsafe mix of type 'bool' and type 'BOOL' in operation
-d:\projects\c\learn\201classincpp\classincpp\consoleroutine.cpp(58): warning C4805: '==': unsafe mix of type 'bool' and type 'BOOL' in operation
-d:\projects\c\learn\201classincpp\classincpp\consoleroutine.cpp(69): warning C4805: '==': unsafe mix of type 'bool' and type 'BOOL' in operation
-  list2link.cpp
-  strutils.cpp
-  tcircle.cpp
-  tgeom.cpp
-  tpoint.cpp
-  trect.cpp
-  GameTank.cpp
-  Generating Code...
-  GameTank.vcxproj -> D:\projects\c\learn\201ClassInCpp\x64\Debug\GameTank.exe
+﻿  GameTank.vcxproj -> C:\Users\Filliny\Source\Repos\sergyeyev\learn\201ClassInCpp\x64\Debug\GameTank.exe

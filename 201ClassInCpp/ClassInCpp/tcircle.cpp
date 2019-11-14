@@ -5,6 +5,7 @@
 #include "tgeom.h"
 #include "tcircle.h"
 #include "consoleroutine.h"
+#include <Windows.h>
 
 TCircle::TCircle() {
 	TGeom::TGeom();
@@ -13,8 +14,8 @@ TCircle::TCircle() {
 
 TCircle::~TCircle() {
 	Erase();
-	TGeom::~TGeom();
-}
+	//TGeom::~TGeom();  //exeption when exit from destructor cos TGeom example atodestruct when exiting child class destructor 
+}                       // do this right behaviour?
 
 short TCircle::getR() {
 	return r;
@@ -33,23 +34,38 @@ void TCircle::InitTest() {
 	r = rand() % 4 + 3;
 };
 
-int TCircle::Contains(const short X, const short Y){
+int TCircle::Contains(const short X, const short Y) {
 	int result = 0;
-	if ( ( (X - getX() )*(X - getX()) + (Y - getY())*(Y - getY()) ) <= (r * r) ) {
+	if (((X - getX())*(X - getX()) + (Y - getY())*(Y - getY())) <= (r * r)) {
 		result = 1;
 	}
 	return result;
 };
 
 void TCircle::Print() {
-	consoleSetColors( getColor(), getBgColor() );
+	consoleSetColors(getColor(), getBgColor());
 	for (int i = (getX() - r); i <= (getX() + r); i++) {
 		for (int j = (getY() - r); j <= (getY() + r); j++) {
-			if ( 1 == Contains(i, j) ) {
+			if (1 == Contains(i, j)) {
 				consoleGotoXY(i, j);
-				printf("%c", getSymb() );
+				printf("%c", getSymb());
 			}
 		}
+	}
+}
+
+void TCircle::PrintSlowBoom() {
+	consoleSetColors(getColor(), getBgColor());
+	for (int R = 1; R <= r; R++) {
+		for (int i = (getX() - R); i <= (getX() + R); i++) {
+			for (int j = (getY() - R); j <= (getY() + R); j++) {
+				if (1 == Contains(i, j)) {
+					consoleGotoXY(i, j);
+					printf("%c", getSymb());
+				}
+			}
+		}
+		Sleep(1);
 	}
 }
 
@@ -66,7 +82,7 @@ void TCircle::Erase() {
 }
 
 void TCircle::SaveToFile(FILE *fileHandle) {
-   fprintf_s(fileHandle, "TCIRC|%d|%d|%d|%d|%d|%d|%c|%s\n", id, getX(), getY(), r, (int)getColor(), (int)getBgColor(), getSymb(), name);
+	fprintf_s(fileHandle, "TCIRC|%d|%d|%d|%d|%d|%d|%c|%s\n", id, getX(), getY(), r, (int)getColor(), (int)getBgColor(), getSymb(), name);
 }
 
 int TCircle::LoadFromStr(char *buffer) {

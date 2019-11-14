@@ -14,8 +14,9 @@ TRect::TRect() {
 
 TRect::~TRect() {
 	Erase();
-	TGeom::~TGeom();
-}
+	//TGeom::~TGeom(); // exeption when exit from destructor cos TGeom example atodestruct when exiting child class destructor
+}                     // do this right behaviour?
+
 
 void TRect::InitTest() {
 	TGeom::InitTest();

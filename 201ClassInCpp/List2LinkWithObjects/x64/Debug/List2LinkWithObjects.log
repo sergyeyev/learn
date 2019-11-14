@@ -1,0 +1,19 @@
+﻿D:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(944,5): warning MSB8027: Two or more files with the name of pch.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are ..\ClassInCpp\pch.cpp, pch.cpp.
+  pch.cpp
+  consoleroutine.cpp
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.cpp(15): warning C4805: '==': unsafe mix of type 'bool' and type 'BOOL' in operation
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.cpp(25): warning C4805: '==': unsafe mix of type 'bool' and type 'BOOL' in operation
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.cpp(36): warning C4805: '==': unsafe mix of type 'bool' and type 'BOOL' in operation
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.cpp(47): warning C4805: '==': unsafe mix of type 'bool' and type 'BOOL' in operation
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.cpp(58): warning C4805: '==': unsafe mix of type 'bool' and type 'BOOL' in operation
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\consoleroutine.cpp(69): warning C4805: '==': unsafe mix of type 'bool' and type 'BOOL' in operation
+  list2link.cpp
+  pch.cpp
+c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\classincpp\pch.cpp(3): fatal error C1854: cannot overwrite information formed during creation of the precompiled header in object file: 'c:\users\filliny\source\repos\sergyeyev\learn\201classincpp\list2linkwithobjects\x64\debug\pch.obj'
+  strutils.cpp
+  tcircle.cpp
+  tgeom.cpp
+  tpoint.cpp
+  trect.cpp
+  List2LinkWithObjects.cpp
+  Generating Code...

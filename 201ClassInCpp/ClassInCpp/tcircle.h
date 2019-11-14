@@ -13,6 +13,7 @@ public:
 	virtual void InitTest();
 	virtual int Contains(const short X, const short Y);
 	virtual void Print();
+	virtual void PrintSlowBoom();
 	virtual void Erase();
 	virtual void SaveToFile(FILE *fileHandle);
 	virtual int LoadFromStr(char *buffer);
