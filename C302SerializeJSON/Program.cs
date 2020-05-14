@@ -7,9 +7,9 @@ namespace C302SerializeJSON {
         unsafe public static void Main(string[] args) {
             Application.Init();
             // Creates the top-level window to show
-            var win = new Window("Serialize JSON") {
+            var win = new Window("Наше окно тестовго приложения") {
                X = 0,
-               Y = 1,
+               Y = 1, // для меню оставим одну строчку
                Width = Dim.Fill(),
                Height = Dim.Fill()
             };
@@ -29,6 +29,16 @@ namespace C302SerializeJSON {
                 })
             });
             Application.Top.Add(menu);
+
+            var LLabel1 = new Label(0, 0, "Элемент класса Label с координатами (0,0) ");
+            var LLabel2 = new Label(1, 1, "Элемент класса Label с координатами (1,1) ");
+            var LLabel3 = new Label(2, 2, "Элемент класса Label с координатами (2,2) ");
+            var LLabel4 = new Label(3, 18, "Элемент класса Label с координатами (3,18) ");
+            var LLabel11 = new Label(-1, 4, "Элемент класса Label с координатами (-1,4) ");
+            var LLabel12 = new Label(-3, 5, "Элемент класса Label с координатами (-3,5) ");
+            var LLabel13 = new Label(150, 6, "Элемент класса Label с координатами (150,6) ");
+
+            win.Add( LLabel1, LLabel2, LLabel3, LLabel4, LLabel11, LLabel12, LLabel13);
 
             Application.Run();
         }
