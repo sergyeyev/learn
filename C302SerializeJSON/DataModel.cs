@@ -19,6 +19,9 @@ namespace C302SerializeJSON {
             get => FName;
             set { FName = value; }
         }
+        public override String ToString() {
+            return FId.PadLeft(40) + ". " + FName;
+        }
     }
 
     public class CourceItem {
@@ -50,6 +53,11 @@ namespace C302SerializeJSON {
         }
     }
     public class Reference : List<ReferenceItem> {
+        public Reference(dynamic AObject = null) {
+            if(null != AObject) {
+                LoadFromJSON(AObject);
+            }
+        }
         public void LoadFromJSON(dynamic AObject) {
             Clear();
             foreach(var LObj in AObject) {
@@ -58,6 +66,13 @@ namespace C302SerializeJSON {
                 LItem.Name = ( (String)LObj.Value );
                 Add(LItem);
             }
+        }
+        public String[] ToStringArray() {
+            String[] LResult = new String[Count];
+            for(int i =0; i<Count; i++) {
+                LResult[i] = this[i].Id.ToString() + ". " + this[i].Name;
+            }
+            return LResult;
         }
     }
 }

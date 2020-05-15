@@ -14,6 +14,43 @@ namespace C302SerializeJSON {
         const String CFolderMyApplication = "WorkJSON";
         const String CRemoteJSON = "http://resources.finance.ua/ru/public/currency-cash.json";
         const String CLocalJSON = "currency-cash.json";
+        // поля для модели данных
+        public static Reference Cities;
+        public static Reference Regions;
+        // поля для элементов управления
+        public static MenuBar MainMenu;
+        // обработчики событий
+        public static void miFileExit() {
+            Application.Top.Running = false;
+        }
+        public static void miRefNew(String ATtile, Reference ARef) {
+            Window LWndw = new Window(ATtile) {
+                X = 0,
+                Y = 1, // для меню оставим одну строчку
+                Width = Dim.Fill(),
+                Height = Dim.Fill()
+            };
+            LWndw.ColorScheme.Normal = Application.Driver.MakeAttribute(Color.Black, Color.Green);
+            ListView LListViewRef = new ListView(
+                new Rect() {
+                    X = 0,
+                    Y = 0,
+                    Height = 25,
+                    Width = 120
+                },
+                ARef);
+            LWndw.Add(LListViewRef);
+            Application.Top.Add(LWndw);
+            Application.Run();
+        }
+        public static void miRefCities() {
+            miRefNew("Города", Cities);
+        }
+        public static void miRefRegions() {
+            miRefNew("Регионы", Regions);
+        }
+
+
         public static void DownloadFileText(String ARemoteURL, String ALocalPath) {
             WebRequest LWRQ = WebRequest.Create(ARemoteURL);
             LWRQ.Credentials = CredentialCache.DefaultCredentials;
@@ -51,44 +88,23 @@ namespace C302SerializeJSON {
             String LJSON = File.ReadAllText(Path.Combine(LDefaultPath, CLocalJSON));
             var LCourceObject = JsonConvert.DeserializeObject<dynamic>(LJSON);
             // 4. создаём справочники
-            Reference LCities = new Reference();
-            LCities.LoadFromJSON(LCourceObject.cities);
-
-
+            Cities  = new Reference(LCourceObject.cities);
+            Regions = new Reference(LCourceObject.regions);
 
             Application.Init();
-            // Creates the top-level window to show
-            var win = new Window("Наше окно тестовго приложения") {
-               X = 0,
-               Y = 1, // для меню оставим одну строчку
-               Width = Dim.Fill(),
-               Height = Dim.Fill()
-            };
-            Application.Top.Add(win);
-
-            //MenuBarItem bmiFile = new MenuBarItem("_File", null);            
-            //MenuBarItem bmiRef  = new MenuBarItem("_File", null);
-
-
-            // Creates a menubar, the item "New" has a help menu.
-            var menu = new MenuBar(new MenuBarItem[] {
-                new MenuBarItem ("_File", new MenuItem [] {
-                    new MenuItem ("_New"  , "Creates new file", null),
-                    new MenuItem ("_Close", "", null),
-                    new MenuItem ("Выход" , "", () => {
-                        Application.Top.Running = false;
-                    } 
-                    )
-                }),
-                new MenuBarItem ("_Edit", new MenuItem [] {
-                    new MenuItem ("_Copy", "", null),
-                    new MenuItem ("C_ut", "", null),
-                    new MenuItem ("_Paste", "", null)
-                })
-            });
-            Application.Top.Add(menu);
-
  
+            // Создаём главное меню программы
+            MenuItem LmiFileExit    = new MenuItem("Выход", "Выход из приложения", () => { miFileExit(); });
+            MenuItem LmiRefsCities  = new MenuItem("Города", "", () => { miRefCities(); });
+            MenuItem LmiRefsRegions = new MenuItem("Регионы", "", () => { miRefRegions(); });
+            MenuBarItem LbmiFile    = new MenuBarItem("Файл", new MenuItem[] { LmiFileExit } );
+            MenuBarItem LbmiRefs    = new MenuBarItem("Справочники", new MenuItem[] { LmiRefsCities, LmiRefsRegions });
+            MainMenu = new MenuBar(new MenuBarItem[] {LbmiFile, LbmiRefs});
+
+            // добавляем в приложение главное меню
+            Application.Top.Add(MainMenu);
+
+
             Application.Run();
         }
     }
