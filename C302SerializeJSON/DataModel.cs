@@ -32,7 +32,6 @@ namespace C302SerializeJSON {
         private String FAddress;
         private String FPhone;
         private String FLink;
-
         public String OldId {
             get => FOldId;
             set { FOldId = value; }
@@ -50,5 +49,15 @@ namespace C302SerializeJSON {
             set { FLink = value; }
         }
     }
-
+    public class Reference : List<ReferenceItem> {
+        public void LoadFromJSON(dynamic AObject) {
+            Clear();
+            foreach(var LObj in AObject) {
+                ReferenceItem LItem = new ReferenceItem();
+                LItem.Id   = LObj.Name;
+                LItem.Name = ( (String)LObj.Value );
+                Add(LItem);
+            }
+        }
+    }
 }
