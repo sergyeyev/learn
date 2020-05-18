@@ -17,6 +17,9 @@ namespace C302SerializeJSON {
         // поля для модели данных
         public static Reference Cities;
         public static Reference Regions;
+        public static Reference Currencies;
+        public static Reference OrgTypes;
+        public static Organitations Orgs;
         // поля для элементов управления
         public static MenuBar MainMenu;
         // обработчики событий
@@ -48,6 +51,32 @@ namespace C302SerializeJSON {
         }
         public static void miRefRegions() {
             miRefNew("Регионы", Regions);
+        }
+        public static void miRefCurrencies() {
+            miRefNew("Валюты", Currencies);
+        }
+        public static void miRefOrgTypes() {
+            miRefNew("Типы организаций", OrgTypes);
+        }
+        public static void miRefOrgs() {
+            Window LWndw = new Window("Организации") {
+                X = 0,
+                Y = 1, // для меню оставим одну строчку
+                Width = Dim.Fill(),
+                Height = Dim.Fill()
+            };
+            LWndw.ColorScheme.Normal = Application.Driver.MakeAttribute(Color.White, Color.Blue);
+            ListView LListViewRef = new ListView(
+                new Rect() {
+                    X = 0,
+                    Y = 0,
+                    Height = 56,
+                    Width = 156
+                },
+                Orgs);
+            LWndw.Add(LListViewRef);
+            Application.Top.Add(LWndw);
+            Application.Run();
         }
 
 
@@ -88,17 +117,26 @@ namespace C302SerializeJSON {
             String LJSON = File.ReadAllText(Path.Combine(LDefaultPath, CLocalJSON));
             var LCourceObject = JsonConvert.DeserializeObject<dynamic>(LJSON);
             // 4. создаём справочники
-            Cities  = new Reference(LCourceObject.cities);
-            Regions = new Reference(LCourceObject.regions);
+            Cities     = new Reference(LCourceObject.cities);
+            Regions    = new Reference(LCourceObject.regions);
+            Currencies = new Reference(LCourceObject.currencies);
+            OrgTypes   = new Reference(LCourceObject.orgTypes);
+            Orgs       = new Organitations(LCourceObject.organizations, OrgTypes, Regions, Cities);
+
 
             Application.Init();
- 
             // Создаём главное меню программы
-            MenuItem LmiFileExit    = new MenuItem("Выход", "Выход из приложения", () => { miFileExit(); });
-            MenuItem LmiRefsCities  = new MenuItem("Города", "", () => { miRefCities(); });
-            MenuItem LmiRefsRegions = new MenuItem("Регионы", "", () => { miRefRegions(); });
+            MenuItem LmiFileExit       = new MenuItem("Выход", "Выход из приложения", () => { miFileExit(); });
+            MenuItem LmiRefsCities     = new MenuItem("Города", "", () => { miRefCities(); });
+            MenuItem LmiRefsRegions    = new MenuItem("Регионы", "", () => { miRefRegions(); });
+            MenuItem LmiRefsCurrencies = new MenuItem("Валюты", "", () => { miRefCurrencies(); });
+            MenuItem LmiRefsOrgTypes   = new MenuItem("Типы организаций", "", () => { miRefOrgTypes(); });
+            MenuItem LmiRefsOrgs       = new MenuItem("Организации", "", () => { miRefOrgs(); });
+
             MenuBarItem LbmiFile    = new MenuBarItem("Файл", new MenuItem[] { LmiFileExit } );
-            MenuBarItem LbmiRefs    = new MenuBarItem("Справочники", new MenuItem[] { LmiRefsCities, LmiRefsRegions });
+            MenuBarItem LbmiRefs    = new MenuBarItem("Справочники", new MenuItem[] { 
+                LmiRefsCities, LmiRefsRegions, LmiRefsCurrencies, LmiRefsOrgTypes, LmiRefsOrgs
+            });
             MainMenu = new MenuBar(new MenuBarItem[] {LbmiFile, LbmiRefs});
 
             // добавляем в приложение главное меню

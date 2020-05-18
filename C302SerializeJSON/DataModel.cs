@@ -20,7 +20,7 @@ namespace C302SerializeJSON {
             set { FName = value; }
         }
         public override String ToString() {
-            return FId.PadLeft(40) + ". " + FName;
+            return FId.PadLeft(20) + " \u2551 " + FName;
         }
     }
 
@@ -31,6 +31,9 @@ namespace C302SerializeJSON {
     }
 
     public class OrgsItem : ReferenceItem {
+        private ReferenceItem FOrgType;
+        private ReferenceItem FRegion;
+        private ReferenceItem FCity;
         private String FOldId;
         private String FAddress;
         private String FPhone;
@@ -51,6 +54,39 @@ namespace C302SerializeJSON {
             get => FLink;
             set { FLink = value; }
         }
+        public ReferenceItem OrgType {
+            get => FOrgType;
+            set { FOrgType = value; }
+        }
+        public ReferenceItem Region {
+            get => FRegion;
+            set { FRegion = value; }
+        }
+        public ReferenceItem City {
+            get => FCity;
+            set { FCity = value; }
+        }
+        public override String ToString() {
+            String LResult = "";
+            if(null != FOrgType) {
+                LResult += FOrgType.Name.PadRight(10) + " \u2551 ";
+            } else {
+                LResult += " ".PadRight(10) + " \u2551 ";
+            }
+            LResult += Name.PadRight(36) + " \u2551 ";
+            if(null != FRegion) {
+                LResult += FRegion.Name.PadRight(24) + " ";
+            } else {
+                LResult += " ".PadRight(24) + " ";
+            }
+            if(null != FCity) {
+                LResult += FCity.Name.PadRight(10) + " ";
+            } else {
+                LResult += " ".PadRight(10) + " ";
+            }
+            LResult += Address.PadRight(32) + " \u2551 " + Phone;
+            return LResult;
+        }
     }
     public class Reference : List<ReferenceItem> {
         public Reference(dynamic AObject = null) {
@@ -67,12 +103,60 @@ namespace C302SerializeJSON {
                 Add(LItem);
             }
         }
-        public String[] ToStringArray() {
-            String[] LResult = new String[Count];
-            for(int i =0; i<Count; i++) {
-                LResult[i] = this[i].Id.ToString() + ". " + this[i].Name;
+        public ReferenceItem FindById(String AId) {
+            ReferenceItem LResult = null;
+            for(int i = 0; i<Count; i++) {
+                if(this[i].Id.Equals(AId)) {
+                    LResult = this[i];
+                    break;
+                }
             }
             return LResult;
+        }
+    }
+
+    public class Organitations : List<OrgsItem> {
+        private Reference FOrgTypes;
+        private Reference FRegions;
+        private Reference FCities;
+
+        public Organitations(dynamic AObject = null, 
+                  Reference AOrgTypes = null, 
+                  Reference ARegions = null, 
+                  Reference ACities = null
+        ) {
+            FOrgTypes = AOrgTypes;
+            FRegions = ARegions;
+            FCities = ACities;
+            if(null != AObject) {
+                LoadFromJSON(AObject);
+            }
+        }
+        public void LoadFromJSON(dynamic AObject) {
+            Clear();
+            foreach(var LObj in AObject) {
+                OrgsItem LItem = new OrgsItem();
+                LItem.Id   = LObj.id;
+                LItem.OldId = LObj.oldId;
+                LItem.Name = ( (String)LObj.title );
+                LItem.Address = ( (String)LObj.address );
+                LItem.Phone   = ( (String)LObj.phone );
+                LItem.Link    = ( (String)LObj.link );
+                if(null != FOrgTypes) {
+                    LItem.OrgType = FOrgTypes.FindById((String)LObj.orgType);
+                }
+                if(null != FRegions) {
+                    LItem.Region = FRegions.FindById((String)LObj.regionId);
+                }
+                if(null != FCities) {
+                    LItem.City = FCities.FindById((String)LObj.cityId);
+                }
+                Add(LItem);
+                /*
+                     "currencies":{"EUR":{"ask":"29.0000","bid":"28.4000"},"RUB":{"ask":"0.3750","bid":"0.3500"},"USD":{"ask":"26.8000","bid":"26.4000"}}},                 
+                */
+
+            }
         }
     }
 }
