@@ -23,11 +23,23 @@ namespace C302SerializeJSON {
             return FId.PadLeft(20) + " \u2551 " + FName;
         }
     }
-
     public class CourceItem {
         public ReferenceItem Currency;
         public float Buy;
         public float Sale;
+        public override String ToString() {
+            String LResult = "";
+            if(null != Currency) {
+                LResult += Currency.Id.PadLeft(8);
+            } else {
+                LResult += " ".PadLeft(8);
+            }
+            LResult += " \u2551 " + Buy.ToString().PadLeft(10) + " \u2551 " + Sale.ToString().PadLeft(10);
+            return LResult;
+        }
+    }
+    public class CourcesList : List<CourceItem> {
+
     }
 
     public class OrgsItem : ReferenceItem {
@@ -38,6 +50,10 @@ namespace C302SerializeJSON {
         private String FAddress;
         private String FPhone;
         private String FLink;
+        public CourcesList Cources;
+        public OrgsItem() {
+            Cources = new CourcesList();
+        }
         public String OldId {
             get => FOldId;
             set { FOldId = value; }
@@ -88,6 +104,7 @@ namespace C302SerializeJSON {
             return LResult;
         }
     }
+
     public class Reference : List<ReferenceItem> {
         public Reference(dynamic AObject = null) {
             if(null != AObject) {
@@ -119,15 +136,18 @@ namespace C302SerializeJSON {
         private Reference FOrgTypes;
         private Reference FRegions;
         private Reference FCities;
+        private Reference FCurrencies;
 
         public Organitations(dynamic AObject = null, 
                   Reference AOrgTypes = null, 
                   Reference ARegions = null, 
-                  Reference ACities = null
+                  Reference ACities = null,
+                  Reference ACurrencies = null
         ) {
             FOrgTypes = AOrgTypes;
             FRegions = ARegions;
             FCities = ACities;
+            FCurrencies = ACurrencies;
             if(null != AObject) {
                 LoadFromJSON(AObject);
             }
@@ -151,11 +171,23 @@ namespace C302SerializeJSON {
                 if(null != FCities) {
                     LItem.City = FCities.FindById((String)LObj.cityId);
                 }
+                LItem.Cources.Clear();
+                if(null != FCurrencies) {
+                    foreach(var LCource in LObj.currencies) {
+                        CourceItem LCrsItem = new CourceItem();
+                        LCrsItem.Currency = FCurrencies.FindById((String)LCource.Name);
+                        foreach(var LCourceData in LCource.Value) {
+                            if(((String)LCourceData.Name).Equals("ask")) {
+                                LCrsItem.Buy = LCourceData.Value;
+                            }
+                            if(((String)LCourceData.Name ).Equals("bid")) {
+                                LCrsItem.Sale = LCourceData.Value;
+                            }
+                        }
+                        LItem.Cources.Add(LCrsItem);
+                    }
+                }
                 Add(LItem);
-                /*
-                     "currencies":{"EUR":{"ask":"29.0000","bid":"28.4000"},"RUB":{"ask":"0.3750","bid":"0.3500"},"USD":{"ask":"26.8000","bid":"26.4000"}}},                 
-                */
-
             }
         }
     }

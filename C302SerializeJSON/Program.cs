@@ -8,6 +8,7 @@ using System.Net;
 using Newtonsoft.Json;
 using NStack;
 using Terminal.Gui;
+using System.Runtime.InteropServices;
 
 namespace C302SerializeJSON {
     class Program {
@@ -58,13 +59,44 @@ namespace C302SerializeJSON {
         public static void miRefOrgTypes() {
             miRefNew("Типы организаций", OrgTypes);
         }
+        public static void miCources(OrgsItem AItem) {
+            Window LWndw = new Window("Курсы валют у "+AItem.Name.PadRight(36));
+            LWndw.X = 0;
+            LWndw.Y = 1;
+            LWndw.Width = Dim.Fill();
+            LWndw.Height = Dim.Fill();
+            LWndw.ColorScheme.Normal = Application.Driver.MakeAttribute(Color.White, Color.Red);
+            ListView LListViewCource = new ListView(
+                new Rect() {
+                    X = 0,
+                    Y = 0,
+                    Height = 20,
+                    Width = 50
+                },
+                AItem.Cources);
+            LWndw.Add(LListViewCource);
+            Application.Top.Add(LWndw);
+            Application.Run();
+        }
         public static void miRefOrgs() {
-            Window LWndw = new Window("Организации") {
+            void KeyDown(KeyEvent keyEvent, ListView AListView) {
+                if(keyEvent.Key == Key.Enter) {
+                    miCources(Orgs[AListView.SelectedItem]);
+                }
+            }
+            Window LWndw = new Window("Организации");
+            LWndw.X = 0;
+            LWndw.Y = 1;
+            LWndw.Width = Dim.Fill();
+            LWndw.Height = Dim.Fill();
+            /*
+            {
                 X = 0,
                 Y = 1, // для меню оставим одну строчку
                 Width = Dim.Fill(),
                 Height = Dim.Fill()
             };
+            */
             LWndw.ColorScheme.Normal = Application.Driver.MakeAttribute(Color.White, Color.Blue);
             ListView LListViewRef = new ListView(
                 new Rect() {
@@ -74,6 +106,7 @@ namespace C302SerializeJSON {
                     Width = 156
                 },
                 Orgs);
+            LListViewRef.OnKeyDown += (KeyEvent keyEvent) => KeyDown(keyEvent, LListViewRef);
             LWndw.Add(LListViewRef);
             Application.Top.Add(LWndw);
             Application.Run();
@@ -121,7 +154,7 @@ namespace C302SerializeJSON {
             Regions    = new Reference(LCourceObject.regions);
             Currencies = new Reference(LCourceObject.currencies);
             OrgTypes   = new Reference(LCourceObject.orgTypes);
-            Orgs       = new Organitations(LCourceObject.organizations, OrgTypes, Regions, Cities);
+            Orgs       = new Organitations(LCourceObject.organizations, OrgTypes, Regions, Cities, Currencies);
 
 
             Application.Init();
