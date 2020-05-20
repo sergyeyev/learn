@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using NStack;
 using Terminal.Gui;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace C302SerializeJSON {
     class Program {
@@ -23,41 +24,48 @@ namespace C302SerializeJSON {
         public static Organitations Orgs;
         // поля для элементов управления
         public static MenuBar MainMenu;
+        public static Window WndCities;
+        public static Window WndRegions;
+        public static Window WndCurrencies;
+        public static Window WndOrgTypes;
+        public static Window WndOrgs;
         // обработчики событий
         public static void miFileExit() {
             Application.Top.Running = false;
         }
-        public static void miRefNew(String ATtile, Reference ARef) {
-            Window LWndw = new Window(ATtile) {
-                X = 0,
-                Y = 1, // для меню оставим одну строчку
-                Width = Dim.Fill(),
-                Height = Dim.Fill()
-            };
-            LWndw.ColorScheme.Normal = Application.Driver.MakeAttribute(Color.Black, Color.Green);
-            ListView LListViewRef = new ListView(
-                new Rect() {
+        public static Window miRefNew(String ATtile, Reference ARef) {
+            Window LResult = null;
+            for(int i = 0; i < Application.Top.Subviews.Count; i++) {
+                if(Application.Top.Subviews[i].Id == ATtile) {
+                    LResult = (Window)Application.Top.Subviews[i];
+                    Application.Top.RemoveAll();
+                    Application.Top.Add(MainMenu);
+                    Application.Top.Add(LResult);
+                    LResult.FocusFirst();
+                    break;
+                }
+            }
+            if(null == LResult) {
+                LResult = new Window(ATtile) {
+                    Id = ATtile,
                     X = 0,
-                    Y = 0,
-                    Height = 25,
-                    Width = 120
-                },
-                ARef);
-            LWndw.Add(LListViewRef);
-            Application.Top.Add(LWndw);
-            Application.Run();
-        }
-        public static void miRefCities() {
-            miRefNew("Города", Cities);
-        }
-        public static void miRefRegions() {
-            miRefNew("Регионы", Regions);
-        }
-        public static void miRefCurrencies() {
-            miRefNew("Валюты", Currencies);
-        }
-        public static void miRefOrgTypes() {
-            miRefNew("Типы организаций", OrgTypes);
+                    Y = 1, // для меню оставим одну строчку
+                    Width = Dim.Fill(),
+                    Height = Dim.Fill()
+                };
+                ListView LListViewRef = new ListView(
+                    new Rect() {
+                        X = 0,
+                        Y = 0,
+                        Height = 56,
+                        Width = 158
+                    },
+                    ARef);
+                LResult.Add(LListViewRef);
+                Application.Top.Add(LResult);
+            }
+            LResult.ColorScheme.Normal = Application.Driver.MakeAttribute(Color.Green, Color.Black);
+            return LResult;
         }
         public static void miCources(OrgsItem AItem) {
             Window LWndw = new Window("Курсы валют у "+AItem.Name.PadRight(36));
@@ -70,8 +78,8 @@ namespace C302SerializeJSON {
                 new Rect() {
                     X = 0,
                     Y = 0,
-                    Height = 20,
-                    Width = 50
+                    Height = 56,
+                    Width = 156
                 },
                 AItem.Cources);
             LWndw.Add(LListViewCource);
@@ -81,7 +89,7 @@ namespace C302SerializeJSON {
         public static void miRefOrgs() {
             void KeyDown(KeyEvent keyEvent, ListView AListView) {
                 if(keyEvent.Key == Key.Enter) {
-                    miCources(Orgs[AListView.SelectedItem]);
+                    miCources((OrgsItem)Orgs[AListView.SelectedItem]);
                 }
             }
             Window LWndw = new Window("Организации");
@@ -139,6 +147,39 @@ namespace C302SerializeJSON {
             Directory.SetCurrentDirectory(LDefaultPath);
             return LDefaultPath;
         }
+        public static MenuBar AppMainMenu() {
+            MenuItem LmiFileExit = new MenuItem("Выход", "Выход из приложения", () => {
+                miFileExit();
+            });
+            MenuItem LmiRefsCities = new MenuItem("Города", "", () => {
+                WndCities = miRefNew("Города", Cities);
+                Application.Run();
+            });
+            MenuItem LmiRefsRegions = new MenuItem("Регионы", "", () => {
+                WndRegions = miRefNew("Регионы", Regions);
+                Application.Run();
+            });
+            MenuItem LmiRefsCurrencies = new MenuItem("Валюты", "", () => {
+                WndCurrencies = miRefNew("Валюты", Currencies);
+                Application.Run();
+            });
+            MenuItem LmiRefsOrgTypes = new MenuItem("Типы организаций", "", () => {
+                WndOrgTypes = miRefNew("Типы организаций", OrgTypes);
+                Application.Run();
+            });
+            MenuItem LmiRefsOrgs = new MenuItem("Организации", "", () => {
+                WndOrgs = miRefNew("Организации", Orgs);
+                Application.Run();
+            });
+
+            MenuBarItem LbmiFile = new MenuBarItem("Файл", new MenuItem[] { LmiFileExit });
+            MenuBarItem LbmiRefs = new MenuBarItem("Справочники", new MenuItem[] {
+                LmiRefsCities, LmiRefsRegions, LmiRefsCurrencies, LmiRefsOrgTypes, LmiRefsOrgs
+            });
+            MenuBar LResult = new MenuBar(new MenuBarItem[] { LbmiFile, LbmiRefs });
+            //LResult.ColorScheme.Normal = Application.Driver.MakeAttribute(Color.Cyan, Color.Black);
+            return LResult;
+        }
         public static void Main(string[] args) {
             // 1. проверка рабочего каталога приложения
             String LDefaultPath = CheckFolders();
@@ -155,27 +196,16 @@ namespace C302SerializeJSON {
             Currencies = new Reference(LCourceObject.currencies);
             OrgTypes   = new Reference(LCourceObject.orgTypes);
             Orgs       = new Organitations(LCourceObject.organizations, OrgTypes, Regions, Cities, Currencies);
+            // 5. зануляем переменные - указатели на объекты окна
+            WndCities = null;
+            WndRegions = null;
+            WndCurrencies = null;
+            WndOrgTypes = null;
 
+            MainMenu = AppMainMenu();
 
             Application.Init();
-            // Создаём главное меню программы
-            MenuItem LmiFileExit       = new MenuItem("Выход", "Выход из приложения", () => { miFileExit(); });
-            MenuItem LmiRefsCities     = new MenuItem("Города", "", () => { miRefCities(); });
-            MenuItem LmiRefsRegions    = new MenuItem("Регионы", "", () => { miRefRegions(); });
-            MenuItem LmiRefsCurrencies = new MenuItem("Валюты", "", () => { miRefCurrencies(); });
-            MenuItem LmiRefsOrgTypes   = new MenuItem("Типы организаций", "", () => { miRefOrgTypes(); });
-            MenuItem LmiRefsOrgs       = new MenuItem("Организации", "", () => { miRefOrgs(); });
-
-            MenuBarItem LbmiFile    = new MenuBarItem("Файл", new MenuItem[] { LmiFileExit } );
-            MenuBarItem LbmiRefs    = new MenuBarItem("Справочники", new MenuItem[] { 
-                LmiRefsCities, LmiRefsRegions, LmiRefsCurrencies, LmiRefsOrgTypes, LmiRefsOrgs
-            });
-            MainMenu = new MenuBar(new MenuBarItem[] {LbmiFile, LbmiRefs});
-
-            // добавляем в приложение главное меню
             Application.Top.Add(MainMenu);
-
-
             Application.Run();
         }
     }

@@ -20,7 +20,7 @@ namespace C302SerializeJSON {
             set { FName = value; }
         }
         public override String ToString() {
-            return FId.PadLeft(20) + " \u2551 " + FName;
+            return FId.PadLeft(26) + " \u2551 " + FName;
         }
     }
     public class CourceItem {
@@ -132,7 +132,7 @@ namespace C302SerializeJSON {
         }
     }
 
-    public class Organitations : List<OrgsItem> {
+    public class Organitations : Reference {
         private Reference FOrgTypes;
         private Reference FRegions;
         private Reference FCities;
