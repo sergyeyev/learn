@@ -10,6 +10,7 @@ using NStack;
 using Terminal.Gui;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace C302SerializeJSON {
     class Program {
@@ -19,6 +20,7 @@ namespace C302SerializeJSON {
         const String CRemoteJSON = "http://resources.finance.ua/ru/public/currency-cash.json";
         const String CLocalJSON = "currency-cash.json";
         // поля для модели данных
+        public static String AppDefaultPathData;
         public static Reference Cities;
         public static Reference Regions;
         public static Reference Currencies;
@@ -126,8 +128,6 @@ namespace C302SerializeJSON {
             Application.Top.Add(LWndw);
             Application.Run();
         }
-
-
         public static void DownloadFileText(String ARemoteURL, String ALocalPath) {
             WebRequest LWRQ = WebRequest.Create(ARemoteURL);
             LWRQ.Credentials = CredentialCache.DefaultCredentials;
@@ -154,7 +154,6 @@ namespace C302SerializeJSON {
             Directory.SetCurrentDirectory(LDefaultPath);
             return LDefaultPath;
         }
-
         public static String CheckFoldersData() {
             // I. установление путей в приложении
             // I.1 получаем путь к папке "Мои Документы"
@@ -179,6 +178,7 @@ namespace C302SerializeJSON {
             MenuItem LmiFileExit = new MenuItem(Msgs.StrFileExit, "", () => {
                 miFileExit();
             });
+            LmiFileExit.Title = Msgs.StrFileExit;
             MenuItem LmiRefsCities = new MenuItem(Msgs.StrTowns, "", () => {
                 WndCities = miRefNew(Msgs.StrTowns, Cities);
                 Application.Run();
@@ -204,7 +204,18 @@ namespace C302SerializeJSON {
             MenuBarItem LbmiRefs = new MenuBarItem(Msgs.StrReferences, new MenuItem[] {
                 LmiRefsCities, LmiRefsRegions, LmiRefsCurrencies, LmiRefsOrgTypes, LmiRefsOrgs
             });
-            MenuBar LResult = new MenuBar(new MenuBarItem[] { LbmiFile, LbmiRefs });
+            String[] LLocalFiles = Directory.GetFiles(Path.Combine(AppDefaultPathData, CFolderLocal));
+
+            MenuItem[] LbmiLanguages = new MenuItem[LLocalFiles.Count()];
+            int i = 0;
+            foreach(String LLocalFile in LLocalFiles) {
+                String LLocalName = Path.GetFileNameWithoutExtension(LLocalFile);
+                LbmiLanguages[i] = new MenuItem(LLocalName.ToLower(), "", null);
+                 i++;
+            }
+            MenuBarItem LbmiViewLanguages = new MenuBarItem(Msgs.StrViewLanguage, LbmiLanguages);
+            MenuBarItem LbmiView = new MenuBarItem(Msgs.StrView, LbmiLanguages);
+            MenuBar LResult = new MenuBar(new MenuBarItem[] { LbmiFile, LbmiRefs, LbmiView });
             LResult.ColorScheme = Colors.Menu;
             return LResult;
         }
@@ -222,22 +233,22 @@ namespace C302SerializeJSON {
             Settings.LoadFromFile( Path.Combine(LSettingsPath, CFileSettings) );
 
             // II.1. проверка рабочего каталога приложения
-            String LDefaultPath = CheckFoldersData();
+            AppDefaultPathData = CheckFoldersData();
             // II.2. скачать файл из интернета
-            if(!File.Exists(Path.Combine(LDefaultPath, CLocalJSON))) {
-                DownloadFileText(CRemoteJSON, Path.Combine(LDefaultPath, CLocalJSON));
+            if(!File.Exists(Path.Combine(AppDefaultPathData, CLocalJSON))) {
+                DownloadFileText(CRemoteJSON, Path.Combine(AppDefaultPathData, CLocalJSON));
             }
             // II.3. загрузить данные из файла
-            String LJSON = File.ReadAllText(Path.Combine(LDefaultPath, CLocalJSON));
+            String LJSON = File.ReadAllText(Path.Combine(AppDefaultPathData, CLocalJSON));
             var LCourceObject = JsonConvert.DeserializeObject<dynamic>(LJSON);
             // II.3.1. загрузка локализации
             Msgs = new MessagesHolder();
             // II.3.1.1 первый запуск приложения
-            if(!File.Exists(Path.Combine(LDefaultPath, CFolderLocal, Settings.Localization.ToLower()+".json"))) {
-                Msgs.SaveToFile(Path.Combine(LDefaultPath, CFolderLocal, Settings.Localization.ToLower() + ".json"));
+            if(!File.Exists(Path.Combine(AppDefaultPathData, CFolderLocal, Settings.Localization.ToLower()+".json"))) {
+                Msgs.SaveToFile(Path.Combine(AppDefaultPathData, CFolderLocal, Settings.Localization.ToLower() + ".json"));
             }
             // II.3.2. организовать выбор локализации
-            String[] LLocalFiles = Directory.GetFiles(Path.Combine(LDefaultPath, CFolderLocal));
+            String[] LLocalFiles = Directory.GetFiles(Path.Combine(AppDefaultPathData, CFolderLocal));
             foreach(String LLocalFile  in LLocalFiles) {
                 String LLocalName = Path.GetFileNameWithoutExtension(LLocalFile);
                 if(LLocalName.ToUpper().Equals(Settings.Localization)) { 

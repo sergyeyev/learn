@@ -11,6 +11,8 @@ namespace C302SerializeJSON {
         public String StrOrgs;
         public String StrReferences;
         public String StrFile;
+        public String StrView;
+        public String StrViewLanguage;
         public String StrFileExit;
         public MessagesHolder() {
             StrTowns = "Города";
@@ -21,6 +23,8 @@ namespace C302SerializeJSON {
             StrFile = "Файл";
             StrFileExit = "Выход";
             StrReferences = "Справочники";
+            StrView = "Вид";
+            StrViewLanguage = "Язык интерфейса";
         }
         public void SaveToFile(String FileName) {
             String LFileContent = JsonConvert.SerializeObject(this, Formatting.Indented);
