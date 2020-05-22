@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace C302SerializeJSON {
     class Program {
+        const String CFileSettings = "settings.json";
         const String CFolderMyApplication = "WorkJSON";
         const String CFolderLocal = "lang";
         const String CRemoteJSON = "http://resources.finance.ua/ru/public/currency-cash.json";
@@ -24,6 +25,7 @@ namespace C302SerializeJSON {
         public static Reference OrgTypes;
         public static Organitations Orgs;
         // служебные поля
+        public static AppSettings Settings;
         public static MessagesHolder Msgs;
         // поля для элементов управления
         public static MenuBar MainMenu;
@@ -68,7 +70,8 @@ namespace C302SerializeJSON {
                 LResult.Add(LListViewRef);
                 Application.Top.Add(LResult);
             }
-            LResult.ColorScheme.Normal = Application.Driver.MakeAttribute(Color.Green, Color.Black);
+            LResult.ColorScheme.Normal = Application.Driver.MakeAttribute(Settings.Foreground, Settings.Background);
+            //MainMenu.ColorScheme = Colors.Menu;
             return LResult;
         }
         public static void miCources(OrgsItem AItem) {
@@ -135,7 +138,24 @@ namespace C302SerializeJSON {
             LReader.Close();
             File.WriteAllText(ALocalPath, LFileBody);
         }
-        public static String CheckFolders() {
+        public static String CheckFoldersSettings() {
+            // I. установление путей в приложении
+            // I.1 получаем путь к папке "AppData"
+            String LDefaultPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            // I.2 устанавливаем текущим путь "AppData"
+            Directory.SetCurrentDirectory(LDefaultPath);
+            // I.3 проверяем наличие папки FolderMyApplication
+            if(!Directory.Exists(CFolderMyApplication)) { // если нет
+                Directory.CreateDirectory(CFolderMyApplication); // создаём эту папку
+            }
+            // I.4 получаем путь к папке "AppData" \ FolderMyApplication
+            LDefaultPath = Path.Combine(LDefaultPath, CFolderMyApplication);
+            // устанавливаем этот путь текущим для приложения
+            Directory.SetCurrentDirectory(LDefaultPath);
+            return LDefaultPath;
+        }
+
+        public static String CheckFoldersData() {
             // I. установление путей в приложении
             // I.1 получаем путь к папке "Мои Документы"
             String LDefaultPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -185,30 +205,46 @@ namespace C302SerializeJSON {
                 LmiRefsCities, LmiRefsRegions, LmiRefsCurrencies, LmiRefsOrgTypes, LmiRefsOrgs
             });
             MenuBar LResult = new MenuBar(new MenuBarItem[] { LbmiFile, LbmiRefs });
-            //LResult.ColorScheme.Normal = Application.Driver.MakeAttribute(Color.Cyan, Color.Black);
+            LResult.ColorScheme = Colors.Menu;
             return LResult;
         }
         public static void Main(string[] args) {
-            // 1. проверка рабочего каталога приложения
-            String LDefaultPath = CheckFolders();
-            // 2. скачать файл из интернета
+            // I.0 Настройки приложения
+            Settings = new AppSettings();
+            // I.1 проверка каталога настроек
+            String LSettingsPath = CheckFoldersSettings();
+            // I.2. проверяем, существует ли файл настроек? (первый запуск приложения)
+            if(!File.Exists( Path.Combine(LSettingsPath, CFileSettings) )) {
+                // если нет, сохраняем настройки по-умолчанию в файл
+                Settings.SaveToFile(Path.Combine(LSettingsPath, CFileSettings));
+            }
+            // I.3 загружаем настройки
+            Settings.LoadFromFile( Path.Combine(LSettingsPath, CFileSettings) );
+
+            // II.1. проверка рабочего каталога приложения
+            String LDefaultPath = CheckFoldersData();
+            // II.2. скачать файл из интернета
             if(!File.Exists(Path.Combine(LDefaultPath, CLocalJSON))) {
                 DownloadFileText(CRemoteJSON, Path.Combine(LDefaultPath, CLocalJSON));
             }
-            // 3. загрузить данные из файла
+            // II.3. загрузить данные из файла
             String LJSON = File.ReadAllText(Path.Combine(LDefaultPath, CLocalJSON));
             var LCourceObject = JsonConvert.DeserializeObject<dynamic>(LJSON);
-            // 3.1. загрузка локализации
+            // II.3.1. загрузка локализации
             Msgs = new MessagesHolder();
+            // II.3.1.1 первый запуск приложения
+            if(!File.Exists(Path.Combine(LDefaultPath, CFolderLocal, Settings.Localization.ToLower()+".json"))) {
+                Msgs.SaveToFile(Path.Combine(LDefaultPath, CFolderLocal, Settings.Localization.ToLower() + ".json"));
+            }
+            // II.3.2. организовать выбор локализации
             String[] LLocalFiles = Directory.GetFiles(Path.Combine(LDefaultPath, CFolderLocal));
-            // 3.2. организовать выбор локализации
             foreach(String LLocalFile  in LLocalFiles) {
                 String LLocalName = Path.GetFileNameWithoutExtension(LLocalFile);
-                if(LLocalName.ToUpper().Equals("BL")) { // заглушка, строку "EN" мы будем брать из настроек
+                if(LLocalName.ToUpper().Equals(Settings.Localization)) { 
                     Msgs.LoadFromFile(LLocalFile);
                 }
             }
-            // 4. создаём справочники
+            // III.1. создаём справочники
             Cities     = new Reference(LCourceObject.cities);
             Regions    = new Reference(LCourceObject.regions);
             Currencies = new Reference(LCourceObject.currencies);
@@ -225,6 +261,10 @@ namespace C302SerializeJSON {
             Application.Init();
             Application.Top.Add(MainMenu);
             Application.Run();
+
+            // ZZZ.1. при выходе из приложения сохраняем настройки
+            // потому, что возможно они были изменены пользователем в процессе  работы приложения
+            Settings.SaveToFile(Path.Combine(LSettingsPath, CFileSettings));
         }
     }
 }
