@@ -30,7 +30,19 @@ namespace C302SerializeJSON {
         public static AppSettings Settings;
         public static MessagesHolder Msgs;
         // поля для элементов управления
+        // главное меню
         public static MenuBar MainMenu;
+        public static MenuBarItem MIFile;
+        public static MenuItem MIFileExit;
+        public static MenuBarItem MIRefs;
+        public static MenuItem MIRefsCities;
+        public static MenuItem MIRefsRegions;
+        public static MenuItem MIRefsCurrencies;
+        public static MenuItem MIRefsOrgTypes;
+        public static MenuItem MIRefsOrgs;
+        public static MenuBarItem MIView;
+        public static MenuBarItem MIViewLanguages;
+        // окна
         public static Window WndCities;
         public static Window WndRegions;
         public static Window WndCurrencies;
@@ -74,8 +86,68 @@ namespace C302SerializeJSON {
             }
             LResult.ColorScheme.Normal = Application.Driver.MakeAttribute(Settings.Foreground, Settings.Background);
             //MainMenu.ColorScheme = Colors.Menu;
+            Application.Run();
             return LResult;
         }
+        public static void miLocal(String LocalLang = "ru") {
+            ObjLocal(LocalLang);
+            Application.Run();
+        }
+        public static void ObjInit() {
+            // работаем с окнами
+            WndCities     = null;
+            WndRegions    = null;
+            WndCurrencies = null;
+            WndOrgTypes   = null;
+            // пункты меню главного меню программы
+            MIFileExit       = new MenuItem   (Msgs.StrFileExit, "", () => { miFileExit();});
+            MIFile           = new MenuBarItem(Msgs.StrFile, new MenuItem[] { MIFileExit });
+
+            MIRefsCities     = new MenuItem(Msgs.StrTowns     , "", () => {WndCities     = miRefNew(Msgs.StrTowns, Cities); });
+            MIRefsRegions    = new MenuItem(Msgs.StrRegions   , "", () => {WndRegions    = miRefNew(Msgs.StrRegions, Regions); });
+            MIRefsCurrencies = new MenuItem(Msgs.StrCurrencies, "", () => {WndCurrencies = miRefNew(Msgs.StrCurrencies, Currencies);});
+            MIRefsOrgTypes   = new MenuItem(Msgs.StrOrgTypes  , "", () => {WndOrgTypes   = miRefNew(Msgs.StrOrgTypes, OrgTypes);});
+            MIRefsOrgs       = new MenuItem(Msgs.StrOrgs      , "", () => {WndOrgs       = miRefNew(Msgs.StrOrgs, Orgs); });
+            MIRefs           = new MenuBarItem(Msgs.StrReferences, new MenuItem[] {
+                MIRefsCities, MIRefsRegions, MIRefsCurrencies, MIRefsOrgTypes, MIRefsOrgs
+            });
+            
+            String[] LLocalFiles = Directory.GetFiles(Path.Combine(AppDefaultPathData, CFolderLocal));
+            MenuItem[] LbmiLanguages = new MenuItem[LLocalFiles.Count()];
+            int i = 0;
+            foreach(String LLocalFile in LLocalFiles) {
+                String LLocalName = Path.GetFileNameWithoutExtension(LLocalFile);
+                LbmiLanguages[i] = new MenuItem(LLocalName.ToLower(), "", () => { miLocal(LLocalName.ToLower()); });
+                i++;
+            }
+            MIViewLanguages = new MenuBarItem(Msgs.StrViewLanguage, LbmiLanguages);
+            MIView          = new MenuBarItem(Msgs.StrView, LbmiLanguages);
+            MainMenu        = new MenuBar(new MenuBarItem[] { MIFile, MIRefs, MIView });
+            MainMenu.ColorScheme = Colors.Menu;
+        }
+        public static void ObjLocal(String Localization) {
+            if(null == Msgs) {
+                Msgs = new MessagesHolder();
+            }
+            if(File.Exists(Path.Combine(AppDefaultPathData, CFolderLocal, Localization.ToLower() + ".json"))) {
+                Msgs.LoadFromFile(Path.Combine(AppDefaultPathData, CFolderLocal, Localization.ToLower() + ".json"));
+                MIFile.Title           = Msgs.StrFile;
+                MIFileExit.Title       = Msgs.StrFileExit;
+                MIRefs.Title           = Msgs.StrReferences;
+                MIRefsCities.Title     = Msgs.StrTowns;
+                MIRefsRegions.Title    = Msgs.StrRegions;
+                MIRefsCurrencies.Title = Msgs.StrCurrencies;
+                MIRefsOrgTypes.Title   = Msgs.StrOrgTypes;
+                MIRefsOrgs.Title       = Msgs.StrOrgs;
+                MIView.Title           = Msgs.StrView;
+                MIViewLanguages.Title  = Msgs.StrViewLanguage;
+                if(null != WndCities    ) { WndCities.Title     = Msgs.StrTowns; }
+                if(null != WndRegions   ) { WndRegions.Title    = Msgs.StrRegions; }
+                if(null != WndCurrencies) { WndCurrencies.Title = Msgs.StrCurrencies; }
+                if(null != WndOrgTypes  ) { WndOrgTypes.Title   = Msgs.StrOrgTypes; }
+            }
+        }
+
         public static void miCources(OrgsItem AItem) {
             Window LWndw = new Window("Курсы валют у "+AItem.Name.PadRight(36));
             LWndw.X = 0;
@@ -174,51 +246,6 @@ namespace C302SerializeJSON {
             }
             return LDefaultPath;
         }
-        public static MenuBar AppMainMenu() {
-            MenuItem LmiFileExit = new MenuItem(Msgs.StrFileExit, "", () => {
-                miFileExit();
-            });
-            LmiFileExit.Title = Msgs.StrFileExit;
-            MenuItem LmiRefsCities = new MenuItem(Msgs.StrTowns, "", () => {
-                WndCities = miRefNew(Msgs.StrTowns, Cities);
-                Application.Run();
-            });
-            MenuItem LmiRefsRegions = new MenuItem(Msgs.StrRegions, "", () => {
-                WndRegions = miRefNew(Msgs.StrRegions, Regions);
-                Application.Run();
-            });
-            MenuItem LmiRefsCurrencies = new MenuItem(Msgs.StrCurrencies, "", () => {
-                WndCurrencies = miRefNew(Msgs.StrCurrencies, Currencies);
-                Application.Run();
-            });
-            MenuItem LmiRefsOrgTypes = new MenuItem(Msgs.StrOrgTypes, "", () => {
-                WndOrgTypes = miRefNew(Msgs.StrOrgTypes, OrgTypes);
-                Application.Run();
-            });
-            MenuItem LmiRefsOrgs = new MenuItem(Msgs.StrOrgs, "", () => {
-                WndOrgs = miRefNew(Msgs.StrOrgs, Orgs);
-                Application.Run();
-            });
-
-            MenuBarItem LbmiFile = new MenuBarItem(Msgs.StrFile, new MenuItem[] { LmiFileExit });
-            MenuBarItem LbmiRefs = new MenuBarItem(Msgs.StrReferences, new MenuItem[] {
-                LmiRefsCities, LmiRefsRegions, LmiRefsCurrencies, LmiRefsOrgTypes, LmiRefsOrgs
-            });
-            String[] LLocalFiles = Directory.GetFiles(Path.Combine(AppDefaultPathData, CFolderLocal));
-
-            MenuItem[] LbmiLanguages = new MenuItem[LLocalFiles.Count()];
-            int i = 0;
-            foreach(String LLocalFile in LLocalFiles) {
-                String LLocalName = Path.GetFileNameWithoutExtension(LLocalFile);
-                LbmiLanguages[i] = new MenuItem(LLocalName.ToLower(), "", null);
-                 i++;
-            }
-            MenuBarItem LbmiViewLanguages = new MenuBarItem(Msgs.StrViewLanguage, LbmiLanguages);
-            MenuBarItem LbmiView = new MenuBarItem(Msgs.StrView, LbmiLanguages);
-            MenuBar LResult = new MenuBar(new MenuBarItem[] { LbmiFile, LbmiRefs, LbmiView });
-            LResult.ColorScheme = Colors.Menu;
-            return LResult;
-        }
         public static void Main(string[] args) {
             // I.0 Настройки приложения
             Settings = new AppSettings();
@@ -247,6 +274,7 @@ namespace C302SerializeJSON {
             if(!File.Exists(Path.Combine(AppDefaultPathData, CFolderLocal, Settings.Localization.ToLower()+".json"))) {
                 Msgs.SaveToFile(Path.Combine(AppDefaultPathData, CFolderLocal, Settings.Localization.ToLower() + ".json"));
             }
+            Msgs.LoadFromFile(Path.Combine(AppDefaultPathData, CFolderLocal, Settings.Localization.ToLower() + ".json"));
             // II.3.2. организовать выбор локализации
             String[] LLocalFiles = Directory.GetFiles(Path.Combine(AppDefaultPathData, CFolderLocal));
             foreach(String LLocalFile  in LLocalFiles) {
@@ -261,13 +289,9 @@ namespace C302SerializeJSON {
             Currencies = new Reference(LCourceObject.currencies);
             OrgTypes   = new Reference(LCourceObject.orgTypes);
             Orgs       = new Organitations(LCourceObject.organizations, OrgTypes, Regions, Cities, Currencies);
-            // 5. зануляем переменные - указатели на объекты окна
-            WndCities = null;
-            WndRegions = null;
-            WndCurrencies = null;
-            WndOrgTypes = null;
 
-            MainMenu = AppMainMenu();
+            ObjInit();
+            ObjLocal(Settings.Localization);
 
             Application.Init();
             Application.Top.Add(MainMenu);
