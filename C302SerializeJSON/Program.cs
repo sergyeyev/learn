@@ -48,6 +48,8 @@ namespace C302SerializeJSON {
         public static Window WndCurrencies;
         public static Window WndOrgTypes;
         public static Window WndOrgs;
+        public static ListView ListViewOrgs;
+        public static ListView ListViewOrgsCource;
         // 
         // обработчики событий
         public static void miFileExit() {
@@ -89,8 +91,60 @@ namespace C302SerializeJSON {
             Application.Run();
             return LResult;
         }
+        public static void ListViewOrgsOnSelectedChanged(){
+            ListViewOrgsCource.Clear();
+            OrgsItem LItem = (OrgsItem)Orgs.ElementAt(ListViewOrgs.SelectedItem);
+            ListViewOrgsCource.SetSource(LItem.Cources);
+        }
+        public static Window miRefNewOrgs(String ATtile, Organitations AOrg) {
+            Window LResult = null;
+            for(int i = 0; i < Application.Top.Subviews.Count; i++) {
+                if(Application.Top.Subviews[i].Id == ATtile) {
+                    LResult = (Window)Application.Top.Subviews[i];
+                    Application.Top.RemoveAll();
+                    Application.Top.Add(LResult);
+                    Application.Top.Add(MainMenu);
+                    LResult.FocusFirst();
+                    break;
+                }
+            }
+            if(null == LResult) {
+                LResult = new Window(ATtile) {
+                    Id = ATtile,
+                    X = 0,
+                    Y = 1, // для меню оставим одну строчку
+                    Width = Dim.Fill(),
+                    Height = Dim.Fill()
+                };
+                ListViewOrgs = new ListView(
+                    new Rect() {
+                        X = 0,
+                        Y = 0,
+                        Height = 20,
+                        Width = 158
+                    },
+                    AOrg);
+                //ListViewOrgs.Enter += ListViewOrgsOnEnter;
+                ListViewOrgs.SelectedChanged += () => { ListViewOrgsOnSelectedChanged(); };
+                LResult.Add(ListViewOrgs);
+                ListViewOrgsCource = new ListView() { 
+                    X = 0,
+                    Y = 21,
+                    Height = 36,
+                    Width = 158
+                };
+                ListViewOrgsCource.ColorScheme = new ColorScheme();
+                ListViewOrgsCource.ColorScheme.Normal = Application.Driver.MakeAttribute(Color.Red, Settings.Background);
+                LResult.Add(ListViewOrgsCource);
+            }
+            LResult.ColorScheme.Normal = Application.Driver.MakeAttribute(Settings.Foreground, Settings.Background);
+            Application.Top.Add(LResult);
+            Application.Run();
+            return LResult;
+        }
         public static void miLocal(String LocalLang = "ru") {
             ObjLocal(LocalLang);
+            Settings.Localization = LocalLang;
             Application.Run();
         }
         public static void ObjInit() {
@@ -107,7 +161,7 @@ namespace C302SerializeJSON {
             MIRefsRegions    = new MenuItem(Msgs.StrRegions   , "", () => {WndRegions    = miRefNew(Msgs.StrRegions, Regions); });
             MIRefsCurrencies = new MenuItem(Msgs.StrCurrencies, "", () => {WndCurrencies = miRefNew(Msgs.StrCurrencies, Currencies);});
             MIRefsOrgTypes   = new MenuItem(Msgs.StrOrgTypes  , "", () => {WndOrgTypes   = miRefNew(Msgs.StrOrgTypes, OrgTypes);});
-            MIRefsOrgs       = new MenuItem(Msgs.StrOrgs      , "", () => {WndOrgs       = miRefNew(Msgs.StrOrgs, Orgs); });
+            MIRefsOrgs       = new MenuItem(Msgs.StrOrgs      , "", () => {WndOrgs       = miRefNewOrgs(Msgs.StrOrgs, Orgs); });
             MIRefs           = new MenuBarItem(Msgs.StrReferences, new MenuItem[] {
                 MIRefsCities, MIRefsRegions, MIRefsCurrencies, MIRefsOrgTypes, MIRefsOrgs
             });
@@ -123,7 +177,8 @@ namespace C302SerializeJSON {
             MIViewLanguages = new MenuBarItem(Msgs.StrViewLanguage, LbmiLanguages);
             MIView          = new MenuBarItem(Msgs.StrView, LbmiLanguages);
             MainMenu        = new MenuBar(new MenuBarItem[] { MIFile, MIRefs, MIView });
-            MainMenu.ColorScheme = Colors.Menu;
+            //MainMenu.ColorScheme = new ColorScheme();
+            //MainMenu.ColorScheme.Normal = Application.Driver.MakeAttribute(Color.Blue, Color.White);
         }
         public static void ObjLocal(String Localization) {
             if(null == Msgs) {

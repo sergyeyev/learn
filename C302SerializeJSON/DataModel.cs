@@ -30,11 +30,11 @@ namespace C302SerializeJSON {
         public override String ToString() {
             String LResult = "";
             if(null != Currency) {
-                LResult += Currency.Id.PadLeft(8);
+                LResult += Currency.Id.PadLeft(4);
             } else {
-                LResult += " ".PadLeft(8);
+                LResult += " ".PadLeft(4);
             }
-            LResult += " \u2551 " + Buy.ToString().PadLeft(10) + " \u2551 " + Sale.ToString().PadLeft(10);
+            LResult += "\u2551" + Buy.ToString("0.00").PadLeft(6) + "\u2551" + Sale.ToString("0.00").PadLeft(6);
             return LResult;
         }
     }

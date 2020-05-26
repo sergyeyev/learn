@@ -16,8 +16,7 @@ namespace C302SerializeJSON {
             Foreground   = Terminal.Gui.Color.BrightGreen;
         }
         public void SaveToFile(String FileName) {
-            String LFileContent = JsonConvert.SerializeObject(this, Formatting.Indented);
-            File.WriteAllText(FileName, LFileContent);
+            File.WriteAllText(FileName, JsonConvert.SerializeObject(this, Formatting.Indented));
         }
         public void LoadFromFile(String FileName) {
             String LFileContent = File.ReadAllText(FileName);
