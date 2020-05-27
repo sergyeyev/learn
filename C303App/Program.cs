@@ -15,7 +15,10 @@ using System.Linq;
 namespace C303App {
     class Program {
         // поля для модели данных
-        public static String AppDefaultPathData;
+        public static String    AppDefaultPathData;
+        public static LBAuthors Authors;
+        public static LBBooks   Books;
+        public static LBReaders Readers;
 
         public static String CheckFoldersSettings() {
             // I. установление путей в приложении
@@ -54,10 +57,15 @@ namespace C303App {
             return LDefaultPath;
         }
         static void Main(string[] args) {
-            // II.1. проверка рабочего каталога приложения
+            // проверка рабочего каталога приложения
             AppDefaultPathData = CheckFoldersData();
+            // загрузить справочники из внешних файлов
 
 
+            // сохраняем данные при выходе из приложения
+            if(null != Authors) { Authors.SaveToFile(Path.Combine(AppDefaultPathData, Consts.FileNameAuthors)); }
+            if(null != Books  ) { Books.SaveToFile  (Path.Combine(AppDefaultPathData, Consts.FileNameBooks  )); }
+            if(null != Readers) { Readers.SaveToFile(Path.Combine(AppDefaultPathData, Consts.FileNameReaders)); }
             return;
         }
     }

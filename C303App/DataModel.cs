@@ -1,5 +1,9 @@
 ﻿using System;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace C303App {
     public class RefItem {
@@ -26,4 +30,16 @@ namespace C303App {
             TicketNo = "";
         }
     }
+    public class Ref : List<RefItem> {
+        public virtual void SaveToFile(String AFilePath) {
+            File.WriteAllText(AFilePath, JsonConvert.SerializeObject(this));
+        }
+    }
+    public class LBAuthors : Ref { 
+    }
+    public class LBBooks : Ref {
+    }
+    public class LBReaders : Ref {
+    }
+
 }
