@@ -31,6 +31,23 @@ namespace C303App {
         }
     }
     public class Ref : List<RefItem> {
+        public virtual RefItem LoadFromJSONItem(dynamic AJSONObject) {
+            RefItem LResult = new RefItem();
+
+            return LResult;
+        }
+        public virtual void LoadFromFile(String AFilePath) {
+            if(!File.Exists(AFilePath)) {
+                return;
+            }
+            // очистим список
+            Clear();
+            // загрузка элементов из файла
+            var LJSONList = JsonConvert.DeserializeObject<dynamic>( File.ReadAllText(AFilePath) );
+            foreach(var LJSONItem in LJSONList) {
+                Add( LoadFromJSONItem(LJSONItem) );
+            }
+        }
         public virtual void SaveToFile(String AFilePath) {
             File.WriteAllText(AFilePath, JsonConvert.SerializeObject(this));
         }

@@ -59,7 +59,16 @@ namespace C303App {
         static void Main(string[] args) {
             // проверка рабочего каталога приложения
             AppDefaultPathData = CheckFoldersData();
+            // создаём справочники
+            Authors = new LBAuthors();
+            Books   = new LBBooks();
+            Readers = new LBReaders();
             // загрузить справочники из внешних файлов
+            Authors.LoadFromFile(Path.Combine(AppDefaultPathData, Consts.FileNameAuthors));
+            Books.LoadFromFile  (Path.Combine(AppDefaultPathData, Consts.FileNameBooks  ));
+            Readers.LoadFromFile(Path.Combine(AppDefaultPathData, Consts.FileNameReaders));
+            // создание  интерфейса приложения
+
 
 
             // сохраняем данные при выходе из приложения
