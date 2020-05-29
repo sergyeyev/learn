@@ -37,11 +37,16 @@ namespace C303App {
     }
     public class LBReader : RefItem {
         public String TicketNo;
+        public String Address;
+        public String Phone;
         public LBReader() {
             TicketNo = "";
+            Address = "";
+            Phone = "";
         }
         public override String ToString() {
-            return Id.ToString().PadLeft(8) + " \u2551 " + Name.PadRight(60) + " \u2551 " + TicketNo.PadRight(20)+ " \u2551";
+            return Id.ToString().PadLeft(8) + " \u2551 " + Name.PadRight(20) + " \u2551 " 
+                + TicketNo.PadRight(12) + " \u2551 " + Address.PadRight(40) + " \u2551 " + Phone.PadRight(14) + " \u2551";
         }
     }
     public class Ref : List<RefItem> {
@@ -191,6 +196,12 @@ namespace C303App {
                 }
                 if(( (String)LProperty.Name ).Equals("TicketNo")) {
                     LResult.TicketNo = LProperty.Value;
+                }
+                if(( (String)LProperty.Name ).Equals("Address")) {
+                    LResult.Address = LProperty.Value;
+                }
+                if(( (String)LProperty.Name ).Equals("Phone")) {
+                    LResult.Phone = LProperty.Value;
                 }
             }
             return LResult;
