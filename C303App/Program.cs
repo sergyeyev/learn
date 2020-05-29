@@ -136,8 +136,9 @@ namespace C303App {
             Readers = new LBReaders();
             // загрузить справочники из внешних файлов
             Authors.LoadFromFile(Path.Combine(AppDefaultPathData, Consts.FileNameAuthors));
-            Books.LoadFromFile  (Path.Combine(AppDefaultPathData, Consts.FileNameBooks  ));
+            Books.LoadFromFile  (Path.Combine(AppDefaultPathData, Consts.FileNameBooks  ), new List<Ref> { Authors });
             Readers.LoadFromFile(Path.Combine(AppDefaultPathData, Consts.FileNameReaders));
+
 
             // создание  интерфейса приложения
             ObjInit();
