@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30104.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "C290PSCourceWar", "C290PSCourceWar.vcxproj", "{ACD0EF07-3191-428F-86E7-4797E8CEBF1A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ACD0EF07-3191-428F-86E7-4797E8CEBF1A}.Debug|x64.ActiveCfg = Debug|x64
+		{ACD0EF07-3191-428F-86E7-4797E8CEBF1A}.Debug|x64.Build.0 = Debug|x64
+		{ACD0EF07-3191-428F-86E7-4797E8CEBF1A}.Debug|x86.ActiveCfg = Debug|Win32
+		{ACD0EF07-3191-428F-86E7-4797E8CEBF1A}.Debug|x86.Build.0 = Debug|Win32
+		{ACD0EF07-3191-428F-86E7-4797E8CEBF1A}.Release|x64.ActiveCfg = Release|x64
+		{ACD0EF07-3191-428F-86E7-4797E8CEBF1A}.Release|x64.Build.0 = Release|x64
+		{ACD0EF07-3191-428F-86E7-4797E8CEBF1A}.Release|x86.ActiveCfg = Release|Win32
+		{ACD0EF07-3191-428F-86E7-4797E8CEBF1A}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {022860B2-FECB-45D3-9732-ECD357B4841B}
+	EndGlobalSection
+EndGlobal
