@@ -31,8 +31,29 @@ namespace C303App {
  //       public static MenuBarItem MIViewLanguages;
         // окна
         public static Window WndAuthors;
+        public static ListView ListViewAuthors;
+        public static FrameView WndAuthorsFrameRight;
+        public static TextField TxtFldAuthorId;
+        public static TextField TxtFldAuthorName;
         public static Window WndBooks;
         public static Window WndReaders;
+        public static void ListViewAuthorsOnSelectedChanged() {
+            TxtFldAuthorId.Text   = Authors.ElementAt(ListViewAuthors.SelectedItem).Id.ToString();
+            TxtFldAuthorName.Text = Authors.ElementAt(ListViewAuthors.SelectedItem).Name;
+        }
+        public static void TxtFldAuthorEnter(object sender, EventArgs e) {
+            ( (TextField)sender ).SelectedStart = 0;
+            ( (TextField)sender ).SelectedLength = ( (TextField)sender ).Text.ToString().Length;
+        }
+
+        public static void TxtFldAuthorIdLeave(object sender, EventArgs e) {
+            Authors.ElementAt(ListViewAuthors.SelectedItem).Id = int.Parse(TxtFldAuthorId.Text.ToString());
+        }
+        public static void TxtFldAuthorNameLeave(object sender, EventArgs e) {
+            Authors.ElementAt(ListViewAuthors.SelectedItem).Name = TxtFldAuthorName.Text.ToString();
+        }
+        //TxtFldAuthorName
+
         // методы приложения
         public static Window miRefNew(String ATtile, Ref ARef) {
             Window LResult = null;
@@ -63,6 +84,86 @@ namespace C303App {
                     },
                     ARef);
                 LResult.Add(LListViewRef);
+                Application.Top.Add(LResult);
+            }
+            Application.Run();
+            return LResult;
+        }
+        public static Window miRefNewAuthors(String ATtile, Ref ARef) {
+            Window LResult = null;
+            for(int i = 0; i < Application.Top.Subviews.Count; i++) {
+                if(Application.Top.Subviews[i].Id == ATtile) {
+                    LResult = (Window)Application.Top.Subviews[i];
+                    Application.Top.RemoveAll();
+                    Application.Top.Add(LResult);
+                    Application.Top.Add(MainMenu);
+                    LResult.FocusFirst();
+                    break;
+                }
+            }
+            if(null == LResult) {
+                LResult = new Window(ATtile) {
+                    Id = ATtile,
+                    X = 0,
+                    Y = 1, // для меню оставим одну строчку
+                    Width = Dim.Fill(),
+                    Height = Dim.Fill()
+                };
+                ListViewAuthors = new ListView(
+                    new Rect() {
+                        X = 0,
+                        Y = 0,
+                        Height = 56,
+                        Width = 128
+                    },
+                    ARef);
+                ListViewAuthors.SelectedChanged += () => { ListViewAuthorsOnSelectedChanged(); };
+                LResult.Add(ListViewAuthors);
+                
+                
+                WndAuthorsFrameRight = new FrameView("Автор") {
+                    X = 128,
+                    Y = 0,
+                    Height = 56,
+                    Width = 30
+                };
+                WndAuthorsFrameRight.Add(
+                    new Label("Код:") { 
+                        X = 1, 
+                        Y = 1, 
+                        Height = 1, 
+                        Width = WndAuthorsFrameRight.Width - 4 
+                    }
+                );
+                TxtFldAuthorId = new TextField("") {
+                    X = 1,
+                    Y = 2,
+                    Height = 1,
+                    Width = WndAuthorsFrameRight.Width - 4
+                };
+                TxtFldAuthorId.Enter += TxtFldAuthorEnter;
+                TxtFldAuthorId.Leave += TxtFldAuthorIdLeave;
+                WndAuthorsFrameRight.Add(TxtFldAuthorId);
+
+                WndAuthorsFrameRight.Add(
+                    new Label("Название:") { 
+                        X = 1, 
+                        Y = 5, 
+                        Height = 1, 
+                        Width = WndAuthorsFrameRight.Width - 4 
+                    }
+                );
+                TxtFldAuthorName = new TextField("") {
+                    X = 1,
+                    Y = 6,
+                    Height = 1,
+                    Width = WndAuthorsFrameRight.Width - 4
+                };
+                TxtFldAuthorName.Enter += TxtFldAuthorEnter;
+                TxtFldAuthorName.Leave += TxtFldAuthorNameLeave;  
+                WndAuthorsFrameRight.Add(TxtFldAuthorName);
+
+                LResult.Add(WndAuthorsFrameRight);
                 Application.Top.Add(LResult);
             }
             Application.Run();
@@ -118,7 +219,7 @@ namespace C303App {
             MIFileExit = new MenuItem("Выход", "", () => { miFileExit(); });
             MIFile = new MenuBarItem("Файл", new MenuItem[] { MIFileExit });
 
-            MIRefsAuthors = new MenuItem("Авторы книг", "", () => { WndAuthors = miRefNew("Авторы"  , Authors); });
+            MIRefsAuthors = new MenuItem("Авторы книг", "", () => { WndAuthors = miRefNewAuthors("Авторы"  , Authors); });
             MIRefsBooks   = new MenuItem("Книги"      , "", () => { WndBooks   = miRefNew("Книги"   , Books  ); });
             MIRefsReaders = new MenuItem("Читатели"   , "", () => { WndReaders = miRefNew("Читатели", Readers); });
             MIRefs = new MenuBarItem("Справочники", new MenuItem[] {
