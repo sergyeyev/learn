@@ -52,6 +52,23 @@ namespace C303App {
         public static void TxtFldAuthorNameLeave(object sender, EventArgs e) {
             Authors.ElementAt(ListViewAuthors.SelectedItem).Name = TxtFldAuthorName.Text.ToString();
         }
+
+        public static void AuthorsAdd() {
+            LBAuthor LItem = new LBAuthor();
+            Authors.Add(LItem);
+            ListViewAuthors.SelectedItem = Authors.Count - 1;
+            ListViewAuthorsOnSelectedChanged();
+            ListViewAuthors.FocusFirst();
+        }
+        public static void AuthorsDel() {
+            Authors.Remove(Authors.ElementAt(ListViewAuthors.SelectedItem));
+            ListViewAuthors.FocusFirst();
+        }
+        public static void AuthorsSave() {
+            if(null != Authors) { 
+                Authors.SaveToFile(Path.Combine(AppDefaultPathData, Consts.FileNameAuthors)); 
+            }
+        }
         //TxtFldAuthorName
 
         // методы приложения
@@ -112,18 +129,16 @@ namespace C303App {
                 ListViewAuthors = new ListView(
                     new Rect() {
                         X = 0,
-                        Y = 0,
+                        Y = 1,
                         Height = 56,
                         Width = 128
                     },
                     ARef);
                 ListViewAuthors.SelectedChanged += () => { ListViewAuthorsOnSelectedChanged(); };
                 LResult.Add(ListViewAuthors);
-                
-                
                 WndAuthorsFrameRight = new FrameView("Автор") {
                     X = 128,
-                    Y = 0,
+                    Y = 1,
                     Height = 56,
                     Width = 30
                 };
@@ -164,8 +179,23 @@ namespace C303App {
                 WndAuthorsFrameRight.Add(TxtFldAuthorName);
 
                 LResult.Add(WndAuthorsFrameRight);
+
+                LResult.Add(new Button(0, 0, "_S Сохранить") {
+                    Width = 20,
+                    Clicked = () => { AuthorsSave();  }
+                });
+                LResult.Add(new Button(21, 0, "_A Добавить") {
+                    Width = 12,
+                    Clicked = () => { AuthorsAdd();  }
+                });
+                LResult.Add(new Button(34, 0, "_D Удалить") {
+                    Width = 12,
+                    Clicked = () => { AuthorsDel(); }
+                });
+
                 Application.Top.Add(LResult);
             }
+            ListViewAuthors.FocusFirst();
             Application.Run();
             return LResult;
         }
