@@ -66,6 +66,15 @@ namespace C303App {
             TxtFldBooksAuthor.Text = ((LBBook)Books.ElementAt(ListViewBooks.SelectedItem)).Author.Name;
             TxtFldBooksISBN.Text   = ((LBBook)Books.ElementAt(ListViewBooks.SelectedItem)).ISBN;
         }
+        public static void RefSave(Ref ARef) {
+            if(null != ARef) {
+                ARef.SaveToFile();
+            }
+        }
+        public static void RefDel(Ref ARef, ListView AListView) {
+            ARef.Remove( ARef.ElementAt(AListView.SelectedItem) );
+            AListView.FocusFirst();
+        }
 
         public static void AuthorsAdd() {
             LBAuthor LItem = new LBAuthor();
@@ -75,16 +84,6 @@ namespace C303App {
             ListViewAuthorsOnSelectedChanged();
             ListViewAuthors.FocusFirst();
         }
-        public static void AuthorsDel() {
-            Authors.Remove(Authors.ElementAt(ListViewAuthors.SelectedItem));
-            ListViewAuthors.FocusFirst();
-        }
-        public static void AuthorsSave() {
-            if(null != Authors) { 
-                Authors.SaveToFile(Path.Combine(AppDefaultPathData, Consts.FileNameAuthors)); 
-            }
-        }
-        //TxtFldAuthorName
 
         // методы приложения
         public static Window miRefNew(String ATtile, Ref ARef) {
@@ -214,7 +213,7 @@ namespace C303App {
 
                 LResult.Add(new Button(0, 0, "S Сохранить") {
                     Width = 16,
-                    Clicked = () => { AuthorsSave();  }
+                    Clicked = () => { RefSave(Authors);  }
                 });
                 LResult.Add(new Button(17, 0, "A Добавить") {
                     Width = 16,
@@ -222,7 +221,7 @@ namespace C303App {
                 });
                 LResult.Add(new Button(32, 0, "D Удалить") {
                     Width = 16,
-                    Clicked = () => { AuthorsDel(); }
+                    Clicked = () => { RefDel(Authors, ListViewAuthors); }
                 });
 
                 Application.Top.Add(LResult);
@@ -342,16 +341,16 @@ namespace C303App {
                 LResult.Add(WndBooksFrameRight);
 
                 LResult.Add(new Button(0, 0, "S Сохранить") {
-                    Width = 16//,
-                    //Clicked = () => { AuthorsSave(); }
+                    Width = 16,
+                    Clicked = () => { RefSave(Books); }
                 });
                 LResult.Add(new Button(17, 0, "A Добавить") {
                     Width = 16//,
                     //Clicked = () => { AuthorsAdd(); }
                 });
                 LResult.Add(new Button(32, 0, "D Удалить") {
-                    Width = 16//,
-                    //Clicked = () => { AuthorsDel(); }
+                    Width = 16,
+                    Clicked = () => { RefDel(ARef, ListViewBooks); }
                 });
 
                 Application.Top.Add(LResult);
@@ -423,13 +422,13 @@ namespace C303App {
             // проверка рабочего каталога приложения
             AppDefaultPathData = CheckFoldersData();
             // создаём справочники
-            Authors = new LBAuthors();
-            Books   = new LBBooks();
-            Readers = new LBReaders();
+            Authors = new LBAuthors();  Authors.FileName = Path.Combine(AppDefaultPathData, Consts.FileNameAuthors);
+            Books   = new LBBooks  ();  Books.FileName   = Path.Combine(AppDefaultPathData, Consts.FileNameBooks);
+            Readers = new LBReaders();  Readers.FileName = Path.Combine(AppDefaultPathData, Consts.FileNameReaders);
             // загрузить справочники из внешних файлов
-            Authors.LoadFromFile(Path.Combine(AppDefaultPathData, Consts.FileNameAuthors));
-            Books.LoadFromFile  (Path.Combine(AppDefaultPathData, Consts.FileNameBooks  ), new List<Ref> { Authors });
-            Readers.LoadFromFile(Path.Combine(AppDefaultPathData, Consts.FileNameReaders));
+            Authors.LoadFromFile();
+            Books.LoadFromFile  (null, new List<Ref> { Authors });
+            Readers.LoadFromFile();
 
 
             // создание  интерфейса приложения
@@ -439,9 +438,9 @@ namespace C303App {
             Application.Run();
 
             // сохраняем данные при выходе из приложения
-            if(null != Authors) { Authors.SaveToFile(Path.Combine(AppDefaultPathData, Consts.FileNameAuthors)); }
-            if(null != Books  ) { Books.SaveToFile  (Path.Combine(AppDefaultPathData, Consts.FileNameBooks  )); }
-            if(null != Readers) { Readers.SaveToFile(Path.Combine(AppDefaultPathData, Consts.FileNameReaders)); }
+            if(null != Authors) { Authors.SaveToFile(); }
+            if(null != Books  ) { Books.SaveToFile  (); }
+            if(null != Readers) { Readers.SaveToFile(); }
             return;
         }
     }

@@ -51,6 +51,7 @@ namespace C303App {
         }
     }
     public class Ref : List<RefItem> {
+        public String FileName = "";
         public int TestDataCount = 20;
 
         public virtual int MaxId() {
@@ -79,21 +80,33 @@ namespace C303App {
             }
             return LResult;
         }
-        public virtual void LoadFromFile(String AFilePath, List<Ref> ARefs = null) {
-            if(!File.Exists(AFilePath)) {
+        public virtual void LoadFromFile(String AFilePath = null, List<Ref> ARefs = null) {
+            String LFilePath = AFilePath;
+            if(null == LFilePath) {
+                LFilePath = FileName;
+            } else {
+                FileName = AFilePath;
+            }
+            if(!File.Exists(LFilePath)) {
                 GenTest(ARefs);
                 return;
             }
             // очистим список
             Clear();
             // загрузка элементов из файла
-            var LJSONList = JsonConvert.DeserializeObject<dynamic>( File.ReadAllText(AFilePath) );
+            var LJSONList = JsonConvert.DeserializeObject<dynamic>( File.ReadAllText(LFilePath) );
             foreach(var LJSONItem in LJSONList) {
                 Add( LoadFromJSONItem(LJSONItem, ARefs) );
             }
         }
-        public virtual void SaveToFile(String AFilePath) {
-            File.WriteAllText(AFilePath, JsonConvert.SerializeObject(this, Formatting.Indented));
+        public virtual void SaveToFile(String AFilePath = null) {
+            String LFilePath = AFilePath;
+            if(null == LFilePath) {
+                LFilePath = FileName;
+            }
+            if( (null != LFilePath) && (LFilePath.Length > 0) ){
+                File.WriteAllText(LFilePath, JsonConvert.SerializeObject(this, Formatting.Indented));
+            }
         }
         public virtual void GenTest(List<Ref> ARefs = null) {
             for(int i = 0; i < TestDataCount; i++) {
