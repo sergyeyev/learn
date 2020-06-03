@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.IO;
+using System.Security.Principal;
 
 namespace C303App {
     public class RefItem {
@@ -51,6 +52,21 @@ namespace C303App {
     }
     public class Ref : List<RefItem> {
         public int TestDataCount = 20;
+
+        public virtual int MaxId() {
+            int LResult = 0;
+            for(int i = 0; i < Count; i++) {
+                if(this[i].Id > LResult) {
+                    LResult = this[i].Id;
+                }
+            }
+            return LResult;
+        }
+
+        public virtual int GenId() {
+            return MaxId() + 1;
+        }
+
         public virtual RefItem LoadFromJSONItem(dynamic AJSONObject, List<Ref> ARefs = null) {
             RefItem LResult = new RefItem();
             foreach(var LProperty in AJSONObject) {
