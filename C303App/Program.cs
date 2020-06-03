@@ -30,21 +30,25 @@ namespace C303App {
 //        public static MenuBarItem MIView;
  //       public static MenuBarItem MIViewLanguages;
         // окна
+        // Справочник- Авторы
         public static Window WndAuthors;
         public static ListView ListViewAuthors;
         public static FrameView WndAuthorsFrameRight;
         public static TextField TxtFldAuthorId;
         public static TextField TxtFldAuthorName;
         public static Window WndBooks;
-
+        // Справочник- Книги
         public static ListView ListViewBooks;
         public static FrameView WndBooksFrameRight;
         public static TextField TxtFldBooksId;
         public static TextField TxtFldBooksName;
         public static TextField TxtFldBooksAuthor;
         public static TextField TxtFldBooksISBN;
-
+        // Справочник- Читатели
         public static Window WndReaders;
+        // место для Д.З,..............
+
+
         public static void ListViewAuthorsOnSelectedChanged() {
             TxtFldAuthorId.Text   = Authors.ElementAt(ListViewAuthors.SelectedItem).Id.ToString();
             TxtFldAuthorName.Text = Authors.ElementAt(ListViewAuthors.SelectedItem).Name;
@@ -53,7 +57,6 @@ namespace C303App {
             ( (TextField)sender ).SelectedStart = 0;
             ( (TextField)sender ).SelectedLength = ( (TextField)sender ).Text.ToString().Length;
         }
-
         public static void TxtFldAuthorIdLeave(object sender, EventArgs e) {
             Authors.ElementAt(ListViewAuthors.SelectedItem).Id = int.Parse(TxtFldAuthorId.Text.ToString());
         }
