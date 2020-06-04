@@ -10,9 +10,34 @@ using NStack;
 using Terminal.Gui;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 using System.Linq;
 
 namespace C303App {
+    public static class ViewExtension {
+        class RefObjectLink {
+            public Ref Reference = null;
+        }
+        static readonly ConditionalWeakTable<View, RefObjectLink> FHelperRef = new ConditionalWeakTable<View, RefObjectLink>();
+        public static Ref GetReference(this View AView) {
+            return FHelperRef.GetOrCreateValue(AView).Reference;
+        }
+        public static void SetReference(this View AView, Ref ARef) {
+            FHelperRef.GetOrCreateValue(AView).Reference = ARef;
+        }
+
+        class ViewObjectLink {
+            public View LinkedControl;
+        }
+        static readonly ConditionalWeakTable<View, ViewObjectLink> FHelperLinkedControl = new ConditionalWeakTable<View, ViewObjectLink>();
+        public static View GetLinkedControl(this View AView) {
+            return FHelperLinkedControl.GetOrCreateValue(AView).LinkedControl;
+        }
+        public static void SetLinkedControl(this View AView, View ALinkedControl) {
+            FHelperLinkedControl.GetOrCreateValue(AView).LinkedControl = ALinkedControl;
+        }
+
+    };
     class Program {
         // поля для модели данных
         public static String    AppDefaultPathData;
@@ -57,12 +82,17 @@ namespace C303App {
             ( (TextField)sender ).SelectedStart = 0;
             ( (TextField)sender ).SelectedLength = ( (TextField)sender ).Text.ToString().Length;
         }
-        public static void TxtFldAuthorIdLeave(object sender, EventArgs e) {
-            Authors.ElementAt(ListViewAuthors.SelectedItem).Id = int.Parse(TxtFldAuthorId.Text.ToString());
+        public static void TxtFldId_OnLeave(object sender, EventArgs e) {
+            ((TextField)sender).GetLinkedControl().GetReference().ElementAt(
+                    ( (ListView) ((TextField)sender).GetLinkedControl() ).SelectedItem
+            ).Id = int.Parse(( (TextField)sender ).Text.ToString());
         }
-        public static void TxtFldAuthorNameLeave(object sender, EventArgs e) {
-            Authors.ElementAt(ListViewAuthors.SelectedItem).Name = TxtFldAuthorName.Text.ToString();
+        public static void TxtFldName_OnLeave(object sender, EventArgs e) {
+            ( (TextField)sender ).GetLinkedControl().GetReference().ElementAt(
+                    ( (ListView)( (TextField)sender ).GetLinkedControl() ).SelectedItem
+            ).Name = ((TextField)sender).Text.ToString();
         }
+
         public static void ListViewBooksOnSelectedChanged() {
             TxtFldBooksId.Text     = Books.ElementAt(ListViewBooks.SelectedItem).Id.ToString();
             TxtFldBooksName.Text   = Books.ElementAt(ListViewBooks.SelectedItem).Name;
@@ -151,6 +181,7 @@ namespace C303App {
                         Width = 128
                     },
                     ARef);
+                ListViewAuthors.SetReference(ARef);
                 ListViewAuthors.SelectedChanged += () => { ListViewAuthorsOnSelectedChanged(); };
                 LResult.Add(ListViewAuthors);
                 WndAuthorsFrameRight = new FrameView("Автор") {
@@ -173,8 +204,9 @@ namespace C303App {
                     Height = 1,
                     Width = WndAuthorsFrameRight.Width - 4
                 };
+                TxtFldAuthorId.SetLinkedControl(ListViewAuthors);
                 TxtFldAuthorId.Enter += TxtFld_OnEnter;
-                TxtFldAuthorId.Leave += TxtFldAuthorIdLeave;
+                TxtFldAuthorId.Leave += TxtFldId_OnLeave;
                 WndAuthorsFrameRight.Add(TxtFldAuthorId);
 
                 WndAuthorsFrameRight.Add(
@@ -191,8 +223,9 @@ namespace C303App {
                     Height = 1,
                     Width = WndAuthorsFrameRight.Width - 4
                 };
+                TxtFldAuthorId.SetLinkedControl(ListViewAuthors);
                 TxtFldAuthorName.Enter += TxtFld_OnEnter;
-                //TxtFldAuthorName.Leave += TxtFldAuthorNameLeave;  
+                TxtFldAuthorName.Leave += TxtFldName_OnLeave;  
                 WndAuthorsFrameRight.Add(TxtFldAuthorName);
 
                 WndAuthorsFrameRight.Add(
@@ -261,6 +294,7 @@ namespace C303App {
                         Width = 128
                     },
                     ARef);
+                ListViewBooks.SetReference(ARef);
                 ListViewBooks.SelectedChanged += () => { ListViewBooksOnSelectedChanged(); };
                 LResult.Add(ListViewBooks);
                 WndBooksFrameRight = new FrameView("Книга") {
@@ -283,8 +317,9 @@ namespace C303App {
                     Height = 1,
                     Width = WndBooksFrameRight.Width - 4
                 };
+                TxtFldBooksId.SetLinkedControl(ListViewBooks);
                 TxtFldBooksId.Enter += TxtFld_OnEnter;
-                //TxtFldBooksId.Leave += TxtFldAuthorIdLeave;
+                TxtFldBooksId.Leave += TxtFldId_OnLeave;
                 WndBooksFrameRight.Add(TxtFldBooksId);
 
                 WndBooksFrameRight.Add(
@@ -301,8 +336,9 @@ namespace C303App {
                     Height = 1,
                     Width = WndBooksFrameRight.Width - 4
                 };
+                TxtFldBooksName.SetLinkedControl(ListViewBooks);
                 TxtFldBooksName.Enter += TxtFld_OnEnter;
-                //TxtFldBooksName.Leave += TxtFldAuthorNameLeave;
+                TxtFldBooksName.Leave += TxtFldName_OnLeave;
                 WndBooksFrameRight.Add(TxtFldBooksName);
 
                 WndBooksFrameRight.Add(
@@ -410,7 +446,7 @@ namespace C303App {
             WndReaders = null;
             // пункты меню главного меню программы
             MIFileExit = new MenuItem("Выход", "", () => { miFileExit(); });
-            MIFile = new MenuBarItem("Файл", new MenuItem[] { MIFileExit });
+            MIFile     = new MenuBarItem("Файл", new MenuItem[] { MIFileExit });
 
             MIRefsAuthors = new MenuItem("Авторы книг", "", () => { WndAuthors = miRefNewAuthors("Авторы", Authors); });
             MIRefsBooks   = new MenuItem("Книги"      , "", () => { WndBooks   = miRefNewBooks  ("Книги" , Books  ); });
