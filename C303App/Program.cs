@@ -16,7 +16,7 @@ using System.Linq;
 namespace C303App {
     public static class ViewExtension {
         class RefObjectLink {
-            public Ref Reference = null;
+            public Ref Reference;
         }
         static readonly ConditionalWeakTable<View, RefObjectLink> FHelperRef = new ConditionalWeakTable<View, RefObjectLink>();
         public static Ref GetReference(this View AView) {
@@ -71,12 +71,29 @@ namespace C303App {
         public static TextField TxtFldBooksISBN;
         // Справочник- Читатели
         public static Window WndReaders;
-        // место для Д.З,..............
+        public static ListView ListViewReaders;
+        public static FrameView WndReadersFrameRight;
+        public static TextField TxtFldReadersId;
+        public static TextField TxtFldReadersName;
+        public static TextField TxtFldReadersTicketNo;
+        public static TextField TxtFldReadersAddress;
+        public static TextField TxtFldReadersPhone;
+
 
 
         public static void ListViewAuthorsOnSelectedChanged() {
             TxtFldAuthorId.Text   = Authors.ElementAt(ListViewAuthors.SelectedItem).Id.ToString();
             TxtFldAuthorName.Text = Authors.ElementAt(ListViewAuthors.SelectedItem).Name;
+        }
+        public static void ListViewBooksOnSelectedChanged() {
+            TxtFldBooksId.Text = Books.ElementAt(ListViewBooks.SelectedItem).Id.ToString();
+            TxtFldBooksName.Text = Books.ElementAt(ListViewBooks.SelectedItem).Name;
+            TxtFldBooksAuthor.Text = ( (LBBook)Books.ElementAt(ListViewBooks.SelectedItem) ).Author.Name;
+            TxtFldBooksISBN.Text = ( (LBBook)Books.ElementAt(ListViewBooks.SelectedItem) ).ISBN;
+        }
+        public static void ListViewReadersOnSelectedChanged() {
+            TxtFldReadersId.Text   = Readers.ElementAt(ListViewReaders.SelectedItem).Id.ToString();
+            TxtFldReadersName.Text = Readers.ElementAt(ListViewReaders.SelectedItem).Name;
         }
         public static void TxtFld_OnEnter(object sender, EventArgs e) {
             ( (TextField)sender ).SelectedStart = 0;
@@ -93,12 +110,6 @@ namespace C303App {
             ).Name = ((TextField)sender).Text.ToString();
         }
 
-        public static void ListViewBooksOnSelectedChanged() {
-            TxtFldBooksId.Text     = Books.ElementAt(ListViewBooks.SelectedItem).Id.ToString();
-            TxtFldBooksName.Text   = Books.ElementAt(ListViewBooks.SelectedItem).Name;
-            TxtFldBooksAuthor.Text = ((LBBook)Books.ElementAt(ListViewBooks.SelectedItem)).Author.Name;
-            TxtFldBooksISBN.Text   = ((LBBook)Books.ElementAt(ListViewBooks.SelectedItem)).ISBN;
-        }
         public static void RefSave(Ref ARef) {
             if(null != ARef) {
                 ARef.SaveToFile();
@@ -119,40 +130,6 @@ namespace C303App {
         }
 
         // методы приложения
-        public static Window miRefNew(String ATtile, Ref ARef) {
-            Window LResult = null;
-            for(int i = 0; i < Application.Top.Subviews.Count; i++) {
-                if(Application.Top.Subviews[i].Id == ATtile) {
-                    LResult = (Window)Application.Top.Subviews[i];
-                    Application.Top.RemoveAll();
-                    Application.Top.Add(LResult);
-                    Application.Top.Add(MainMenu);
-                    LResult.FocusFirst();
-                    break;
-                }
-            }
-            if(null == LResult) {
-                LResult = new Window(ATtile) {
-                    Id = ATtile,
-                    X = 0,
-                    Y = 1, // для меню оставим одну строчку
-                    Width = Dim.Fill(),
-                    Height = Dim.Fill()
-                };
-                ListView LListViewRef = new ListView(
-                    new Rect() {
-                        X = 0,
-                        Y = 0,
-                        Height = 56,
-                        Width = 158
-                    },
-                    ARef);
-                LResult.Add(LListViewRef);
-                Application.Top.Add(LResult);
-            }
-            Application.Run();
-            return LResult;
-        }
         public static Window miRefNewAuthors(String ATtile, Ref ARef) {
             Window LResult = null;
             for(int i = 0; i < Application.Top.Subviews.Count; i++) {
@@ -205,6 +182,7 @@ namespace C303App {
                     Width = WndAuthorsFrameRight.Width - 4
                 };
                 TxtFldAuthorId.SetLinkedControl(ListViewAuthors);
+                TxtFldAuthorId.SetReference(ARef);
                 TxtFldAuthorId.Enter += TxtFld_OnEnter;
                 TxtFldAuthorId.Leave += TxtFldId_OnLeave;
                 WndAuthorsFrameRight.Add(TxtFldAuthorId);
@@ -223,28 +201,12 @@ namespace C303App {
                     Height = 1,
                     Width = WndAuthorsFrameRight.Width - 4
                 };
-                TxtFldAuthorId.SetLinkedControl(ListViewAuthors);
+                TxtFldAuthorName.SetLinkedControl(ListViewAuthors);
+                TxtFldAuthorName.SetReference(ARef);
                 TxtFldAuthorName.Enter += TxtFld_OnEnter;
                 TxtFldAuthorName.Leave += TxtFldName_OnLeave;  
                 WndAuthorsFrameRight.Add(TxtFldAuthorName);
 
-                WndAuthorsFrameRight.Add(
-                    new Label("Название:") {
-                        X = 1,
-                        Y = 5,
-                        Height = 1,
-                        Width = WndAuthorsFrameRight.Width - 4
-                    }
-                );
-                TxtFldAuthorName = new TextField("") {
-                    X = 1,
-                    Y = 6,
-                    Height = 1,
-                    Width = WndAuthorsFrameRight.Width - 4
-                };
-                TxtFldAuthorName.Enter += TxtFld_OnEnter;
-                //TxtFldAuthorName.Leave += TxtFldAuthorNameLeave;  
-                WndAuthorsFrameRight.Add(TxtFldAuthorName);
                 LResult.Add(WndAuthorsFrameRight);
 
                 LResult.Add(new Button(0, 0, "S Сохранить") {
@@ -398,6 +360,102 @@ namespace C303App {
             Application.Run();
             return LResult;
         }
+        public static Window miRefNewReaders(String ATtile, Ref ARef) {
+            Window LResult = null;
+            for(int i = 0; i < Application.Top.Subviews.Count; i++) {
+                if(Application.Top.Subviews[i].Id == ATtile) {
+                    LResult = (Window)Application.Top.Subviews[i];
+                    Application.Top.RemoveAll();
+                    Application.Top.Add(LResult);
+                    Application.Top.Add(MainMenu);
+                    LResult.FocusFirst();
+                    break;
+                }
+            }
+            if(null == LResult) {
+                LResult = new Window(ATtile) {
+                    Id = ATtile,
+                    X = 0,
+                    Y = 1, // для меню оставим одну строчку
+                    Width = Dim.Fill(),
+                    Height = Dim.Fill()
+                };
+                ListViewReaders = new ListView(
+                    new Rect() {
+                        X = 0,
+                        Y = 1,
+                        Height = 56,
+                        Width = 128
+                    },
+                    ARef);
+                ListViewReaders.SetReference(ARef);
+                ListViewReaders.SelectedChanged += () => { ListViewReadersOnSelectedChanged(); };
+                LResult.Add(ListViewReaders);
+                WndReadersFrameRight = new FrameView("Читатель") {
+                    X = 128,
+                    Y = 1,
+                    Height = 56,
+                    Width = 30
+                };
+                WndReadersFrameRight.Add(
+                    new Label("Код:") {
+                        X = 1,
+                        Y = 1,
+                        Height = 1,
+                        Width = WndReadersFrameRight.Width - 4
+                    }
+                );
+                TxtFldReadersId = new TextField("") {
+                    X = 1,
+                    Y = 2,
+                    Height = 1,
+                    Width = WndReadersFrameRight.Width - 4
+                };
+                TxtFldReadersId.SetLinkedControl(ListViewReaders);
+                TxtFldReadersId.Enter += TxtFld_OnEnter;
+                TxtFldReadersId.Leave += TxtFldId_OnLeave;
+                WndReadersFrameRight.Add(TxtFldReadersId);
+
+                WndReadersFrameRight.Add(
+                    new Label("Название:") {
+                        X = 1,
+                        Y = 5,
+                        Height = 1,
+                        Width = WndReadersFrameRight.Width - 4
+                    }
+                );
+                TxtFldReadersName = new TextField("") {
+                    X = 1,
+                    Y = 6,
+                    Height = 1,
+                    Width = WndReadersFrameRight.Width - 4
+                };
+                TxtFldReadersName.SetLinkedControl(ListViewReaders);
+                TxtFldReadersName.Enter += TxtFld_OnEnter;
+                TxtFldReadersName.Leave += TxtFldName_OnLeave;
+                WndReadersFrameRight.Add(TxtFldReadersName);
+
+                LResult.Add(WndReadersFrameRight);
+
+                LResult.Add(new Button(0, 0, "S Сохранить") {
+                    Width = 16,
+                    Clicked = () => { RefSave(Readers); }
+                });
+                LResult.Add(new Button(17, 0, "A Добавить") {
+                    Width = 16//,
+                    //Clicked = () => { AuthorsAdd(); }
+                });
+                LResult.Add(new Button(32, 0, "D Удалить") {
+                    Width = 16,
+                    Clicked = () => { RefDel(ARef, ListViewReaders); }
+                });
+
+                Application.Top.Add(LResult);
+            }
+            ListViewReaders.FocusFirst();
+            Application.Run();
+            return LResult;
+        }
         // обработчики событий
         public static void miFileExit() {
             Application.Top.Running = false;
@@ -448,9 +506,9 @@ namespace C303App {
             MIFileExit = new MenuItem("Выход", "", () => { miFileExit(); });
             MIFile     = new MenuBarItem("Файл", new MenuItem[] { MIFileExit });
 
-            MIRefsAuthors = new MenuItem("Авторы книг", "", () => { WndAuthors = miRefNewAuthors("Авторы", Authors); });
-            MIRefsBooks   = new MenuItem("Книги"      , "", () => { WndBooks   = miRefNewBooks  ("Книги" , Books  ); });
-            MIRefsReaders = new MenuItem("Читатели"   , "", () => { WndReaders = miRefNew("Читатели", Readers); });
+            MIRefsAuthors = new MenuItem("Авторы книг", "", () => { WndAuthors = miRefNewAuthors("Авторы"  , Authors); });
+            MIRefsBooks   = new MenuItem("Книги"      , "", () => { WndBooks   = miRefNewBooks  ("Книги"   , Books  ); });
+            MIRefsReaders = new MenuItem("Читатели"   , "", () => { WndReaders = miRefNewReaders("Читатели", Readers); });
             MIRefs = new MenuBarItem("Справочники", new MenuItem[] {
                 MIRefsAuthors, MIRefsBooks, MIRefsReaders
             });

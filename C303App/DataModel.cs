@@ -46,7 +46,7 @@ namespace C303App {
             Phone = "";
         }
         public override String ToString() {
-            return Id.ToString().PadLeft(8) + " \u2551 " + Name.PadRight(20) + " \u2551 " 
+            return Id.ToString().PadLeft(4) + " \u2551 " + Name.PadRight(40) + " \u2551 " 
                 + TicketNo.PadRight(12) + " \u2551 " + Address.PadRight(40) + " \u2551 " + Phone.PadRight(14) + " \u2551";
         }
     }
