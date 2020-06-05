@@ -9,8 +9,7 @@ public:
 	Item();  // конструктор класса
 	~Item(); // деструктор класса
 	// методы класса
-
-
+	virtual void GenTest();
 public:	// методы класса для работы с классом, как с двусвязным списком
 	Item* ListNext;
 	Item* ListPred;

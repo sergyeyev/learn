@@ -52,11 +52,36 @@ int main() {
 	GAppDefaultFileGoods = StringHelper::New();
 	strcpy_s(GAppDefaultFileGoods, StringHelper::DefaultSize, GAppDefaultDocPath);
 	Path::Combine(GAppDefaultFileGoods, DefaultFileNameGoods);
-
 	// 3. Создание глобальных объектов - списков данных
 	GWarriors = (Warrior*)Warrior::ListLoadFromFile(GAppDefaultFileWarrior);
-	GGoods    = (Good*)Good::ListLoadFromFile(GAppDefaultFileGoods);
-
+	GGoods    = (Good   *)Good::ListLoadFromFile(GAppDefaultFileGoods);
+	// 3.1 только для откладки:
+	//     если нет загруженных списков, генерируем тестовые данные
+	if (NULL == GWarriors) {
+		for (int i = 0; i < 20; i++) {
+			Warrior *LItem = new Warrior();
+			LItem->Id = (i + 1);
+			LItem->GenTest();
+			if (NULL == GWarriors) {
+				GWarriors = LItem;
+			} else {
+				GWarriors = (Warrior*)GWarriors->ListAdd(LItem);
+			}
+		}
+	}
+	if (NULL == GGoods) {
+		for (int i = 0; i < 200; i++) {
+			Good* LItem = new Good();
+			LItem->Id = (i + 1);
+			LItem->GenTest();
+			if (NULL == GGoods) {
+				GGoods = LItem;
+			} else {
+				GGoods = (Good*)GGoods->ListAdd(LItem);
+			}
+		}
+	}
+	// 4. Основная работа приложения
 	Application* App = new Application();
 	App->OnEscape = &App_OnEscape;
 	//1. Отладочная информация
@@ -66,8 +91,12 @@ int main() {
 	App->Run();
 	delete App;
 
-	// 99. Осовбождение памяти
 
+
+	// 98. Сохранить данные в файлы
+	GWarriors->ListSaveToFile(GAppDefaultFileWarrior);
+	GGoods->ListSaveToFile(GAppDefaultFileGoods);
+	// 99. Освобождение памяти
 	free(GAppDefaultFileGoods);
 	free(GAppDefaultFileWarrior);
 	free(GAppDefaultDocPath);

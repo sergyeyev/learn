@@ -21,6 +21,10 @@ Item::~Item() {
 	free(Name);
 }
 
+void Item::GenTest() {
+
+}
+
 Item* Item::ListFirst() {
 	Item* LResult = this;
 	while (NULL != LResult->ListPred) {
