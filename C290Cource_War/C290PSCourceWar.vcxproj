@@ -155,6 +155,7 @@
     <ClCompile Include="lib\Console.cpp" />
     <ClCompile Include="lib\Directory.cpp" />
     <ClCompile Include="lib\Environment.cpp" />
+    <ClCompile Include="lib\Menu.cpp" />
     <ClCompile Include="lib\Path.cpp" />
     <ClCompile Include="lib\StringHelper.cpp" />
   </ItemGroup>
@@ -168,6 +169,7 @@
     <ClInclude Include="lib\Console.h" />
     <ClInclude Include="lib\Directory.h" />
     <ClInclude Include="lib\Environment.h" />
+    <ClInclude Include="lib\Menu.h" />
     <ClInclude Include="lib\Path.h" />
     <ClInclude Include="lib\StringHelper.h" />
   </ItemGroup>

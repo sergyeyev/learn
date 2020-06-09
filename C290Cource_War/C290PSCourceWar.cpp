@@ -1,4 +1,5 @@
 #include <iostream>
+#include <conio.h>
 // базовые библиотеки
 #include "lib/ApplicationConsts.h"
 #include "lib/ApplicationGlobals.h"
@@ -14,16 +15,90 @@
 #include "data/DataWarrior.h"
 
 
+void AppGoods_OnCommand(ApplicationConsole* Sender, int Command) {
+	switch (Command) {
+	   case 0: {
+		   Console::GotoXY(0, 0);
+		   Console::SetColor(Console::clLightGreen);
+		   Console::FillRect(' ', 0 ,0, Console::Height(), Console::Width());
+		   if (NULL != GGoods) {
+			   Good *LGood = (Good*)GGoods->ListFirst();
+			   while(NULL != LGood) {
+				   printf("%3d|%-20s |\n", LGood->Id, LGood->Name);
+				   LGood = (Good*)LGood->ListNext;
+			   }
+		   }
+		   int i = _getch();
+		   break;
+	   }
+	   case 1: {
+		   break;
+	   }
+	   case 2: {
+		   Sender->Running = false;
+		   break;
+	   }
+	}
+}
+
+void AppWarriors_OnCommand(ApplicationConsole* Sender, int Command) {
+	switch (Command) {
+	case 0: {
+		break;
+	}
+	case 1: {
+		break;
+	}
+	case 2: {
+		Sender->Running = false;
+		break;
+	}
+	}
+}
+
 void App_OnEscape(Application* Sender) {
 	Sender->Running = false;
+}
+
+void App_OnCommand(ApplicationConsole* Sender, int Command) {
+	switch (Command) {
+	    case 0: {
+			ApplicationConsole* LAppGoods = new ApplicationConsole();
+			LAppGoods->MenuMain->AddItem("1. Отобразить список довольствия ");
+			LAppGoods->MenuMain->AddItem("2. Добавить элемент довольствия ");
+			LAppGoods->MenuMain->AddItem("3. [Esc] Выход в главное меню ");
+			LAppGoods->MenuMain->Selected = 0;
+			LAppGoods->OnCommand = &AppGoods_OnCommand;
+			LAppGoods->OnEscape = &App_OnEscape;
+			LAppGoods->Run();
+			delete LAppGoods;
+			break; 
+		}
+		case 1: {
+			ApplicationConsole* LAppWarriors = new ApplicationConsole();
+			LAppWarriors->MenuMain->AddItem("1. Отобразить список сотрудников ");
+			LAppWarriors->MenuMain->AddItem("2. Добавить нового сотрудника ");
+			LAppWarriors->MenuMain->AddItem("3. [Esc] Выход в главное меню ");
+			LAppWarriors->MenuMain->Selected = 0;
+			LAppWarriors->OnCommand = &AppWarriors_OnCommand;
+			LAppWarriors->OnEscape = &App_OnEscape;
+			LAppWarriors->Run();
+			delete LAppWarriors;
+			break;
+	    }
+		case 2: { 
+			Sender->Running = false;
+			break; 
+		}
+	}
 }
 
 char* GAppDefaultDocPath     = NULL;
 char* GAppDefaultFileWarrior = NULL;
 char* GAppDefaultFileGoods   = NULL;
 
-Warrior* GWarriors;
-Good* GGoods;
+Warrior* GWarriors = NULL;
+Good* GGoods = NULL;
 
 int main() {
 	// 1. Подготовка путей в файловой системе для работы приложения
@@ -81,15 +156,24 @@ int main() {
 			}
 		}
 	}
+	Console::SetScreen(120, 80);
 	// 4. Основная работа приложения
-	Application* App = new Application();
-	App->OnEscape = &App_OnEscape;
+	ApplicationConsole* App = new ApplicationConsole();
+	App->MenuMain->AddItem("1. Довольствие ");
+	App->MenuMain->AddItem("2. Сотрудники ");
+	App->MenuMain->AddItem("3. [Esc] Выход из программы ");
+	App->MenuMain->Selected = 0;
+	App->OnCommand = &App_OnCommand;
+	App->OnEscape  = &App_OnEscape;
 	//1. Отладочная информация
 	//printf("%s\n", GAppDefaultDocPath);
 	//printf("%s\n", GAppDefaultFileWarrior);
 	//printf("%s\n", GAppDefaultFileGoods);
 	App->Run();
 	delete App;
+	// очистим консоль перед выходом из программы
+	Console::SetColor(Console::clWhite, Console::clBlack);
+	Console::FillRect(' ', 0, 0, Console::Height(), Console::Width());
 
 
 
