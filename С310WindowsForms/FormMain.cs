@@ -10,10 +10,12 @@ namespace С310WindowsForms {
     public partial class FormMain : Form {
         public FormMain() {
             InitializeComponent();
+            // WYSIWYG
+            // What You See Is What You Get
         }
 
         private void FormMain_Load(object sender, EventArgs e) {
-            BackColor = Color.Red;
+
         }
     }
 }
