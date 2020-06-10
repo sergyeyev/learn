@@ -15,6 +15,10 @@ Good::~Good() {
 	free(Position);
 }
 
+void  Good::PrintInternal() {
+	printf("| %3d | %-20s| %-20s | %2d | %2d | %8.3f | %8.3f |\n", Id, Name, Position, Foot, Height, Massa, Quant);
+}
+
 void Good::GenTest() {
 	const int LCNamesCount = 5;
 	const char* LCNames[LCNamesCount] = {
@@ -81,4 +85,40 @@ char* Good::LoadFromString(char* Text) {
 	free(LTempPosition);
 
 	return LParser;
+}
+
+
+Good* Good::ListLoadFromFile(const char* FileName) {
+	Good* LResult = NULL;
+	FILE* LFileHandle;
+	int LFileOpenError = fopen_s(&LFileHandle, FileName, "r+");
+	if (0 == LFileOpenError) {
+		char* LBuffer = StringHelper::New(StringHelper::DefaultBufferSize);
+		char* LWork = LBuffer;
+		while (!feof(LFileHandle)) {
+			*LWork = fgetc(LFileHandle);
+			if ('\n' == *LWork) {
+				*LWork = '|';
+				Good* LItem = new Good();
+				LItem->LoadFromString(LBuffer);
+				if (NULL == LResult) {
+					LResult = LItem;
+				} else {
+					LResult = (Good*)LResult->ListAdd(LItem);
+				}
+				StringHelper::Null(LBuffer, StringHelper::DefaultBufferSize);
+				LWork = LBuffer;
+			}
+			else {
+				LWork++;
+			}
+		}
+		free(LBuffer);
+		fclose(LFileHandle);
+	} else {
+		//		Console::GotoXY(20, 20);
+		//		Console::SetColor(Console::clWhite, Console::clLightRed);
+		//		printf(" I cannot to load data from file %s !\n ", FileName);
+	}
+	return LResult;
 }

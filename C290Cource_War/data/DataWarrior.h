@@ -14,9 +14,11 @@ public:
 	~Warrior();
 	// методы класса
 	virtual void GenTest();
+	virtual void PrintInternal();
 public:	// методы класса для работы с классом, как с двусвязным списком
 	virtual void ListSaveToFileItem(FILE* FileHandle);
 	virtual char* LoadFromString(char* Text);
+	static Warrior* ListLoadFromFile(const char* FileName);
 };
 
 #endif

@@ -21,6 +21,16 @@ Item::~Item() {
 	free(Name);
 }
 
+void Item::Print(const short X, const short Y, const Console::ConsoleColors Foreground, const Console::ConsoleColors Background) {
+	Console::SetColor(Foreground, Background);
+	Console::GotoXY(X, Y);
+	PrintInternal();
+}
+
+void Item::PrintInternal() {
+	printf("%3d|%-20s |\n", Id, Name);
+}
+
 void Item::GenTest() {
 
 }
@@ -132,5 +142,18 @@ Item * Item::ListLoadFromFile(const char* FileName) {
 		//		Console::SetColor(Console::clWhite, Console::clLightRed);
 		//		printf(" I cannot to load data from file %s !\n ", FileName);
 	}
+	return LResult;
+}
+
+int Item::ListGenId() {
+	int LResult = 0;
+	Item* LItem = ListFirst();
+	while (NULL  != LItem) {
+		if (LResult < LItem->Id) {
+			LResult = LItem->Id;
+		}
+		LItem = LItem->ListNext;
+	}
+	LResult++;
 	return LResult;
 }

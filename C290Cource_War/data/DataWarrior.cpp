@@ -13,6 +13,10 @@ Warrior::~Warrior() {
 	free(Position);
 }
 
+void Warrior::PrintInternal() {
+	printf("| %3d | %-40s | %-20s | %2d | %2d |\n", Id, Name, Position, Foot, Height);
+}
+
 void Warrior::GenTest() {
 	const int LCNamesCount = 5;
 	const char* LCNames[LCNamesCount] = {
@@ -64,4 +68,40 @@ char* Warrior::LoadFromString(char* Text) {
 	free(LTempPosition);
 
 	return LParser;
+}
+
+
+Warrior* Warrior::ListLoadFromFile(const char* FileName) {
+	Warrior* LResult = NULL;
+	FILE* LFileHandle;
+	int LFileOpenError = fopen_s(&LFileHandle, FileName, "r+");
+	if (0 == LFileOpenError) {
+		char* LBuffer = StringHelper::New(StringHelper::DefaultBufferSize);
+		char* LWork = LBuffer;
+		while (!feof(LFileHandle)) {
+			*LWork = fgetc(LFileHandle);
+			if ('\n' == *LWork) {
+				*LWork = '|';
+				Warrior* LItem = new Warrior();
+				LItem->LoadFromString(LBuffer);
+				if (NULL == LResult) {
+					LResult = LItem;
+				} else {
+					LResult = (Warrior*)LResult->ListAdd(LItem);
+				}
+				StringHelper::Null(LBuffer, StringHelper::DefaultBufferSize);
+				LWork = LBuffer;
+			}
+			else {
+				LWork++;
+			}
+		}
+		free(LBuffer);
+		fclose(LFileHandle);
+	} else {
+		//		Console::GotoXY(20, 20);
+		//		Console::SetColor(Console::clWhite, Console::clLightRed);
+		//		printf(" I cannot to load data from file %s !\n ", FileName);
+	}
+	return LResult;
 }

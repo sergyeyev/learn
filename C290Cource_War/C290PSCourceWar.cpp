@@ -22,16 +22,73 @@ void AppGoods_OnCommand(ApplicationConsole* Sender, int Command) {
 		   Console::SetColor(Console::clLightGreen);
 		   Console::FillRect(' ', 0 ,0, Console::Height(), Console::Width());
 		   if (NULL != GGoods) {
+			   int lX = 0, lY = 0;
 			   Good *LGood = (Good*)GGoods->ListFirst();
 			   while(NULL != LGood) {
-				   printf("%3d|%-20s |\n", LGood->Id, LGood->Name);
+				   LGood->Print(lX, lY, Console::clLightGreen);
 				   LGood = (Good*)LGood->ListNext;
+				   lY++;
 			   }
+		   } else {
+			   printf("\n\n\n   Список довольсствия пуст. Пожалуйсята, добавьте хоть один элемент в список\n\n\n");
 		   }
 		   int i = _getch();
 		   break;
 	   }
 	   case 1: {
+		   // очищаем экран
+		   Console::GotoXY(0, 0);
+		   Console::SetColor(Console::clLightGreen);
+		   Console::FillRect(' ', 0, 0, Console::Height(), Console::Width());
+		   // выводим приглашение пользователю
+		   printf("Добавить элемент довольствия:\n\n");
+		   // временные буферы под ввод пользователем данных
+		   char* LStrName     = StringHelper::New();
+		   char* LStrPosition = StringHelper::New();
+		   char* LStrFoot     = StringHelper::New();
+		   char* LStrHeight   = StringHelper::New();
+		   char* LStrMassa    = StringHelper::New();
+		   char* LStrQuant    = StringHelper::New();
+		   // процедура ввода данных
+		   printf("Введите имя:");
+		   StringHelper::Input(LStrName);
+		   printf("Введите должность, для которой предназначен элемент довольствия или нажмите Enter, если предназначен для всех:");
+		   StringHelper::Input(LStrPosition);
+		   printf("Введите размер ноги или (-1) если довольствие подходит для всех:");
+		   StringHelper::Input(LStrFoot);
+		   printf("Введите размер рост или (-1) если довольствие подходит для всех:");
+		   StringHelper::Input(LStrHeight);
+		   printf("Введите массу одной единицы довольствия:");
+		   StringHelper::Input(LStrMassa);
+		   printf("Введите количество единиц довольствия на складе:");
+		   StringHelper::Input(LStrQuant);
+		   // создаём новый элемент довольствия
+		   Good* LItem = new Good();
+		   if (NULL != GGoods) {// если в списке довольствия есть хоть один элемент
+			   LItem->Id = GGoods->ListGenId();
+		   } else {
+			   LItem->Id = 1;
+		   }
+		   strcpy_s(LItem->Name    , StringHelper::DefaultSize, LStrName);
+		   strcpy_s(LItem->Position, StringHelper::DefaultSize, LStrPosition);
+		   LItem->Foot   = atoi(LStrFoot);
+		   LItem->Height = atoi(LStrHeight);
+		   LItem->Massa  = atof(LStrMassa);
+		   LItem->Quant  = atof(LStrQuant);
+		   // добавляем этот элемент в глобальный список довольствия
+		   if (NULL != GGoods) { // если в списке довольствия есть хоть один элемент
+			   GGoods->ListAdd(LItem); // тогда добавляем созданный пользователем элемент довольствия
+		   } else {
+			   GGoods = LItem; // иначе - список довольствия состоит из одного, вновь созданного элемента
+		   }
+		   // осовобождаем память под временные буферы для ввода пользоваталем данных
+		   free(LStrQuant);
+		   free(LStrMassa);
+		   free(LStrHeight);
+		   free(LStrFoot);
+		   free(LStrPosition);
+		   free(LStrName);
+		   // команда "Добавить элемент довольствия" отработана
 		   break;
 	   }
 	   case 2: {
@@ -44,6 +101,19 @@ void AppGoods_OnCommand(ApplicationConsole* Sender, int Command) {
 void AppWarriors_OnCommand(ApplicationConsole* Sender, int Command) {
 	switch (Command) {
 	case 0: {
+		Console::GotoXY(0, 0);
+		Console::SetColor(Console::clLightGreen);
+		Console::FillRect(' ', 0, 0, Console::Height(), Console::Width());
+		if (NULL != GWarriors) {
+			int lX = 0, lY = 0;
+			Warrior* LWarrior = (Warrior*)GWarriors->ListFirst();
+			while (NULL != LWarrior) {
+				LWarrior->Print(lX, lY, Console::clLightRed);
+				LWarrior = (Warrior*)LWarrior->ListNext;
+				lY++;
+			}
+		}
+		int i = _getch();
 		break;
 	}
 	case 1: {
@@ -144,8 +214,9 @@ int main() {
 			}
 		}
 	}
+	/* тестовое покрытие закомментировано, т.к. есть функция ввода элемента довольствия
 	if (NULL == GGoods) {
-		for (int i = 0; i < 200; i++) {
+		for (int i = 0; i < 20; i++) {
 			Good* LItem = new Good();
 			LItem->Id = (i + 1);
 			LItem->GenTest();
@@ -156,6 +227,7 @@ int main() {
 			}
 		}
 	}
+	*/
 	Console::SetScreen(120, 80);
 	// 4. Основная работа приложения
 	ApplicationConsole* App = new ApplicationConsole();
@@ -178,8 +250,8 @@ int main() {
 
 
 	// 98. Сохранить данные в файлы
-	GWarriors->ListSaveToFile(GAppDefaultFileWarrior);
-	GGoods->ListSaveToFile(GAppDefaultFileGoods);
+	if (NULL != GWarriors) { GWarriors->ListSaveToFile(GAppDefaultFileWarrior);}
+	if (NULL != GGoods   ) { GGoods->ListSaveToFile(GAppDefaultFileGoods);     }
 	// 99. Освобождение памяти
 	free(GAppDefaultFileGoods);
 	free(GAppDefaultFileWarrior);
