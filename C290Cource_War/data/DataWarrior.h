@@ -15,6 +15,7 @@ public:
 	// методы класса
 	virtual void GenTest();
 	virtual void PrintInternal();
+	static void PrintHeader(const short X, const short Y, const Console::ConsoleColors Foreground, const Console::ConsoleColors Background = Console::clBlack);
 public:	// методы класса для работы с классом, как с двусвязным списком
 	virtual void ListSaveToFileItem(FILE* FileHandle);
 	virtual char* LoadFromString(char* Text);

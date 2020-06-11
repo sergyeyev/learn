@@ -24,6 +24,8 @@ void AppGoods_OnCommand(ApplicationConsole* Sender, int Command) {
 		   if (NULL != GGoods) {
 			   int lX = 0, lY = 0;
 			   Good *LGood = (Good*)GGoods->ListFirst();
+			   LGood->PrintHeader(lX, lY, Console::clBlack, Console::clLightGreen);
+			   lY++;
 			   while(NULL != LGood) {
 				   LGood->Print(lX, lY, Console::clLightGreen);
 				   LGood = (Good*)LGood->ListNext;
@@ -107,6 +109,8 @@ void AppWarriors_OnCommand(ApplicationConsole* Sender, int Command) {
 		if (NULL != GWarriors) {
 			int lX = 0, lY = 0;
 			Warrior* LWarrior = (Warrior*)GWarriors->ListFirst();
+			LWarrior->PrintHeader(lX, lY, Console::clBlack, Console::clLightRed);
+			lY++;
 			while (NULL != LWarrior) {
 				LWarrior->Print(lX, lY, Console::clLightRed);
 				LWarrior = (Warrior*)LWarrior->ListNext;
@@ -228,7 +232,7 @@ int main() {
 		}
 	}
 	*/
-	Console::SetScreen(120, 80);
+	Console::SetScreen(DefaultScreenWidth, DefaulScreenHeight);
 	// 4. Основная работа приложения
 	ApplicationConsole* App = new ApplicationConsole();
 	App->MenuMain->AddItem("1. Довольствие ");

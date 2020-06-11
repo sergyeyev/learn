@@ -27,8 +27,14 @@ void Item::Print(const short X, const short Y, const Console::ConsoleColors Fore
 	PrintInternal();
 }
 
+void Item::PrintHeader(const short X, const short Y, const Console::ConsoleColors Foreground, const Console::ConsoleColors Background) {
+	Console::SetColor(Foreground, Background);
+	Console::GotoXY(X, Y);
+	printf("|  Id | Name                       |\n");
+}
+
 void Item::PrintInternal() {
-	printf("%3d|%-20s |\n", Id, Name);
+	printf("| %3d | %-20s |\n", Id, Name);
 }
 
 void Item::GenTest() {

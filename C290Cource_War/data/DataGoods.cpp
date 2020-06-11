@@ -15,6 +15,12 @@ Good::~Good() {
 	free(Position);
 }
 
+void Good::PrintHeader(const short X, const short Y, const Console::ConsoleColors Foreground, const Console::ConsoleColors Background) {
+	Console::SetColor(Foreground, Background);
+	Console::GotoXY(X, Y);
+	printf("| Код |      Название       |      Должность       |нога|рост|  масса   |  кол-во  |\n");
+}
+
 void  Good::PrintInternal() {
 	printf("| %3d | %-20s| %-20s | %2d | %2d | %8.3f | %8.3f |\n", Id, Name, Position, Foot, Height, Massa, Quant);
 }

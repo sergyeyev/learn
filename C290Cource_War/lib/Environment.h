@@ -13,7 +13,6 @@ public:
 		,MyVideos
 		,ProgramFiles
 	};
-
 	static void GetCurrentDir(char* CurrentDir, const int Length = StringHelper::DefaultBufferSize);
 	static void SetCurrentDir(const char* Path);
 	static char* GetFolderPath(SpecialFolder Folder);

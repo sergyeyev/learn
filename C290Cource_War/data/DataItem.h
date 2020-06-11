@@ -14,6 +14,7 @@ public:
 	virtual char* LoadFromString(char* Text);
 	virtual void Print(const short X, const short Y, const Console::ConsoleColors Foreground, const Console::ConsoleColors Background = Console::clBlack);
 	virtual void PrintInternal();
+	static void PrintHeader(const short X, const short Y, const Console::ConsoleColors Foreground, const Console::ConsoleColors Background = Console::clBlack);
 public:	// методы класса для работы с классом, как с двусвязным списком
 	Item* ListNext;
 	Item* ListPred;

@@ -13,6 +13,12 @@ Warrior::~Warrior() {
 	free(Position);
 }
 
+void Warrior::PrintHeader(const short X, const short Y, const Console::ConsoleColors Foreground, const Console::ConsoleColors Background) {
+	Console::SetColor(Foreground, Background);
+	Console::GotoXY(X, Y);
+	printf("| Код |         Фамилия Имя Отчество             |      Должность       |нога|рост|\n");
+}
+
 void Warrior::PrintInternal() {
 	printf("| %3d | %-40s | %-20s | %2d | %2d |\n", Id, Name, Position, Foot, Height);
 }
