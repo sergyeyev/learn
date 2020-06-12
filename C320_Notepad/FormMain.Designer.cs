@@ -26,6 +26,15 @@
             this.TextBoxMain = new System.Windows.Forms.TextBox();
             this.MainMenu = new System.Windows.Forms.MenuStrip();
             this.miMainFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.miFileNew = new System.Windows.Forms.ToolStripMenuItem();
+            this.miFileN001 = new System.Windows.Forms.ToolStripSeparator();
+            this.miFileOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.miFileSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.miFileSaveAs = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.miFilePrint = new System.Windows.Forms.ToolStripMenuItem();
+            this.miFileN002 = new System.Windows.Forms.ToolStripSeparator();
+            this.miFileExit = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.miEditUndo = new System.Windows.Forms.ToolStripMenuItem();
             this.miEditN001 = new System.Windows.Forms.ToolStripSeparator();
@@ -41,22 +50,19 @@
             this.miMainView = new System.Windows.Forms.ToolStripMenuItem();
             this.miViewStatusBar = new System.Windows.Forms.ToolStripMenuItem();
             this.miMainHelp = new System.Windows.Forms.ToolStripMenuItem();
-            this.MainStatusStrip = new System.Windows.Forms.StatusStrip();
             this.miHelpHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.miHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.miFileNew = new System.Windows.Forms.ToolStripMenuItem();
-            this.miFileN001 = new System.Windows.Forms.ToolStripSeparator();
-            this.miFileOpen = new System.Windows.Forms.ToolStripMenuItem();
-            this.miFileSave = new System.Windows.Forms.ToolStripMenuItem();
-            this.miFileSaveAs = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
-            this.miFilePrint = new System.Windows.Forms.ToolStripMenuItem();
-            this.miFileN002 = new System.Windows.Forms.ToolStripSeparator();
-            this.miFileExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.MainStatusStrip = new System.Windows.Forms.StatusStrip();
             this.OpenFileDlg = new System.Windows.Forms.OpenFileDialog();
             this.SaveFileDlg = new System.Windows.Forms.SaveFileDialog();
+            this.FontDlg = new System.Windows.Forms.FontDialog();
+            this.StatusLabelChanged = new System.Windows.Forms.ToolStripStatusLabel();
+            this.StatusLabelKeyIns = new System.Windows.Forms.ToolStripStatusLabel();
+            this.miViewColor = new System.Windows.Forms.ToolStripMenuItem();
+            this.ColorDlg = new System.Windows.Forms.ColorDialog();
             this.MainMenu.SuspendLayout();
+            this.MainStatusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // TextBoxMain
@@ -72,6 +78,9 @@
             this.TextBoxMain.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.TextBoxMain.Size = new System.Drawing.Size(805, 416);
             this.TextBoxMain.TabIndex = 0;
+            this.TextBoxMain.TextChanged += new System.EventHandler(this.TextBoxMain_TextChanged);
+            this.TextBoxMain.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxMain_KeyPress);
+            this.TextBoxMain.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBoxMain_KeyUp);
             // 
             // MainMenu
             // 
@@ -102,6 +111,70 @@
             this.miMainFile.Name = "miMainFile";
             this.miMainFile.Size = new System.Drawing.Size(37, 20);
             this.miMainFile.Text = "File";
+            // 
+            // miFileNew
+            // 
+            this.miFileNew.Name = "miFileNew";
+            this.miFileNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.miFileNew.Size = new System.Drawing.Size(186, 22);
+            this.miFileNew.Text = "New";
+            this.miFileNew.Click += new System.EventHandler(this.miFileNew_Click);
+            // 
+            // miFileN001
+            // 
+            this.miFileN001.Name = "miFileN001";
+            this.miFileN001.Size = new System.Drawing.Size(183, 6);
+            // 
+            // miFileOpen
+            // 
+            this.miFileOpen.Name = "miFileOpen";
+            this.miFileOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.miFileOpen.Size = new System.Drawing.Size(186, 22);
+            this.miFileOpen.Text = "Open";
+            this.miFileOpen.Click += new System.EventHandler(this.miFileOpen_Click);
+            // 
+            // miFileSave
+            // 
+            this.miFileSave.Name = "miFileSave";
+            this.miFileSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.miFileSave.Size = new System.Drawing.Size(186, 22);
+            this.miFileSave.Text = "Save";
+            this.miFileSave.Click += new System.EventHandler(this.miFileSave_Click);
+            // 
+            // miFileSaveAs
+            // 
+            this.miFileSaveAs.Name = "miFileSaveAs";
+            this.miFileSaveAs.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            | System.Windows.Forms.Keys.S)));
+            this.miFileSaveAs.Size = new System.Drawing.Size(186, 22);
+            this.miFileSaveAs.Text = "Save As...";
+            this.miFileSaveAs.Click += new System.EventHandler(this.miFileSaveAs_Click);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(183, 6);
+            // 
+            // miFilePrint
+            // 
+            this.miFilePrint.Name = "miFilePrint";
+            this.miFilePrint.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
+            this.miFilePrint.Size = new System.Drawing.Size(186, 22);
+            this.miFilePrint.Text = "Print";
+            this.miFilePrint.Click += new System.EventHandler(this.miFilePrint_Click);
+            // 
+            // miFileN002
+            // 
+            this.miFileN002.Name = "miFileN002";
+            this.miFileN002.Size = new System.Drawing.Size(183, 6);
+            // 
+            // miFileExit
+            // 
+            this.miFileExit.Name = "miFileExit";
+            this.miFileExit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+            this.miFileExit.Size = new System.Drawing.Size(186, 22);
+            this.miFileExit.Text = "Exit";
+            this.miFileExit.Click += new System.EventHandler(this.miFileExit_Click);
             // 
             // miMainEdit
             // 
@@ -202,7 +275,8 @@
             // miMainView
             // 
             this.miMainView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miViewStatusBar});
+            this.miViewStatusBar,
+            this.miViewColor});
             this.miMainView.Name = "miMainView";
             this.miMainView.Size = new System.Drawing.Size(44, 20);
             this.miMainView.Text = "View";
@@ -224,96 +298,58 @@
             this.miMainHelp.Size = new System.Drawing.Size(44, 20);
             this.miMainHelp.Text = "Help";
             // 
-            // MainStatusStrip
-            // 
-            this.MainStatusStrip.Location = new System.Drawing.Point(0, 441);
-            this.MainStatusStrip.Name = "MainStatusStrip";
-            this.MainStatusStrip.Size = new System.Drawing.Size(805, 22);
-            this.MainStatusStrip.TabIndex = 2;
-            this.MainStatusStrip.Text = "statusStrip1";
-            // 
             // miHelpHelp
             // 
             this.miHelpHelp.Name = "miHelpHelp";
-            this.miHelpHelp.Size = new System.Drawing.Size(180, 22);
+            this.miHelpHelp.Size = new System.Drawing.Size(107, 22);
             this.miHelpHelp.Text = "Help";
             this.miHelpHelp.Click += new System.EventHandler(this.miHelpHelp_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(104, 6);
             // 
             // miHelpAbout
             // 
             this.miHelpAbout.Name = "miHelpAbout";
-            this.miHelpAbout.Size = new System.Drawing.Size(180, 22);
+            this.miHelpAbout.Size = new System.Drawing.Size(107, 22);
             this.miHelpAbout.Text = "About";
             this.miHelpAbout.Click += new System.EventHandler(this.miHelpAbout_Click);
             // 
-            // miFileNew
+            // MainStatusStrip
             // 
-            this.miFileNew.Name = "miFileNew";
-            this.miFileNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.miFileNew.Size = new System.Drawing.Size(186, 22);
-            this.miFileNew.Text = "New";
-            this.miFileNew.Click += new System.EventHandler(this.miFileNew_Click);
+            this.MainStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.StatusLabelChanged,
+            this.StatusLabelKeyIns});
+            this.MainStatusStrip.Location = new System.Drawing.Point(0, 441);
+            this.MainStatusStrip.Name = "MainStatusStrip";
+            this.MainStatusStrip.Size = new System.Drawing.Size(805, 22);
+            this.MainStatusStrip.TabIndex = 2;
+            this.MainStatusStrip.Text = "statusStrip1";
             // 
-            // miFileN001
+            // FontDlg
             // 
-            this.miFileN001.Name = "miFileN001";
-            this.miFileN001.Size = new System.Drawing.Size(183, 6);
+            this.FontDlg.ShowColor = true;
             // 
-            // miFileOpen
+            // StatusLabelChanged
             // 
-            this.miFileOpen.Name = "miFileOpen";
-            this.miFileOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.miFileOpen.Size = new System.Drawing.Size(186, 22);
-            this.miFileOpen.Text = "Open";
-            this.miFileOpen.Click += new System.EventHandler(this.miFileOpen_Click);
+            this.StatusLabelChanged.Name = "StatusLabelChanged";
+            this.StatusLabelChanged.Size = new System.Drawing.Size(118, 17);
+            this.StatusLabelChanged.Text = "toolStripStatusLabel1";
             // 
-            // miFileSave
+            // StatusLabelKeyIns
             // 
-            this.miFileSave.Name = "miFileSave";
-            this.miFileSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.miFileSave.Size = new System.Drawing.Size(186, 22);
-            this.miFileSave.Text = "Save";
-            this.miFileSave.Click += new System.EventHandler(this.miFileSave_Click);
+            this.StatusLabelKeyIns.Name = "StatusLabelKeyIns";
+            this.StatusLabelKeyIns.Size = new System.Drawing.Size(101, 17);
+            this.StatusLabelKeyIns.Text = "StatusLabelKeyIns";
             // 
-            // miFileSaveAs
+            // miViewColor
             // 
-            this.miFileSaveAs.Name = "miFileSaveAs";
-            this.miFileSaveAs.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
-            | System.Windows.Forms.Keys.S)));
-            this.miFileSaveAs.Size = new System.Drawing.Size(186, 22);
-            this.miFileSaveAs.Text = "Save As...";
-            this.miFileSaveAs.Click += new System.EventHandler(this.miFileSaveAs_Click);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(183, 6);
-            // 
-            // miFilePrint
-            // 
-            this.miFilePrint.Name = "miFilePrint";
-            this.miFilePrint.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.miFilePrint.Size = new System.Drawing.Size(186, 22);
-            this.miFilePrint.Text = "Print";
-            this.miFilePrint.Click += new System.EventHandler(this.miFilePrint_Click);
-            // 
-            // miFileN002
-            // 
-            this.miFileN002.Name = "miFileN002";
-            this.miFileN002.Size = new System.Drawing.Size(183, 6);
-            // 
-            // miFileExit
-            // 
-            this.miFileExit.Name = "miFileExit";
-            this.miFileExit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.miFileExit.Size = new System.Drawing.Size(186, 22);
-            this.miFileExit.Text = "Exit";
-            this.miFileExit.Click += new System.EventHandler(this.miFileExit_Click);
+            this.miViewColor.Name = "miViewColor";
+            this.miViewColor.Size = new System.Drawing.Size(180, 22);
+            this.miViewColor.Text = "Color";
+            this.miViewColor.Click += new System.EventHandler(this.miViewColor_Click);
             // 
             // FormMain
             // 
@@ -329,6 +365,8 @@
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.MainMenu.ResumeLayout(false);
             this.MainMenu.PerformLayout();
+            this.MainStatusStrip.ResumeLayout(false);
+            this.MainStatusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -369,6 +407,11 @@
         private System.Windows.Forms.ToolStripMenuItem miFileExit;
         private System.Windows.Forms.OpenFileDialog OpenFileDlg;
         private System.Windows.Forms.SaveFileDialog SaveFileDlg;
+        private System.Windows.Forms.FontDialog FontDlg;
+        private System.Windows.Forms.ToolStripStatusLabel StatusLabelChanged;
+        private System.Windows.Forms.ToolStripStatusLabel StatusLabelKeyIns;
+        private System.Windows.Forms.ToolStripMenuItem miViewColor;
+        private System.Windows.Forms.ColorDialog ColorDlg;
     }
 }
 

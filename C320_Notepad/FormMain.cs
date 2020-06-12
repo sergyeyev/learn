@@ -9,11 +9,26 @@ using System.Windows.Forms;
 
 namespace C320_Notepad {
     public partial class FormMain : Form {
+        private const String CDefaultFaileName = "noname.txt";
+
+
         private String FFileName = "";
+        protected void SetFileNameStatus(String AFileName, bool AChanged = false) {
+            FFileName = AFileName;
+            String LTopText = FFileName;
+            if(AChanged) {
+                LTopText = "*" + LTopText;
+                StatusLabelChanged.Text = "Changed";
+            } else {
+                StatusLabelChanged.Text = "";
+            }
+            StatusLabelKeyIns.Text = "INS";
+            Text = LTopText;
+        }
+
         protected void SetFileName(String AFileName) {
             if(!AFileName.ToUpper().Equals(FFileName.ToUpper())) {
-                FFileName = AFileName;
-                Text = FFileName;
+                SetFileNameStatus(AFileName);
             }
         }
         public String FileName {
@@ -23,6 +38,8 @@ namespace C320_Notepad {
 
         public FormMain() {
             InitializeComponent();
+            SetFileNameStatus(CDefaultFaileName);
+            StatusLabelKeyIns.Text = "";
         }
 
         private void FormMain_Load(object sender, EventArgs e) {
@@ -59,7 +76,12 @@ namespace C320_Notepad {
         }
 
         private void miFormatFont_Click(object sender, EventArgs e) {
-            //
+            FontDlg.Font = TextBoxMain.Font;
+            FontDlg.Color = TextBoxMain.ForeColor;
+            if(FontDlg.ShowDialog() == DialogResult.OK) {
+                TextBoxMain.Font = FontDlg.Font;
+                TextBoxMain.ForeColor = FontDlg.Color;
+            }
         }
 
         private void miViewStatusBar_Click(object sender, EventArgs e) {
@@ -103,11 +125,29 @@ namespace C320_Notepad {
         }
 
         private void miFileSave_Click(object sender, EventArgs e) {
-
+            if(FileName.ToUpper().Equals(CDefaultFaileName.ToUpper())) {
+                miFileSaveAs_Click(sender, e);
+            } else {
+                File.WriteAllText(FileName, TextBoxMain.Text);
+                TextBoxMain.Modified = false;
+                SetFileNameStatus(FileName, TextBoxMain.Modified);
+            }
         }
 
         private void miFileSaveAs_Click(object sender, EventArgs e) {
-
+            SaveFileDlg.Title = "Сохнаить файл как...";
+            SaveFileDlg.Filter =
+                 "Текстовые файлы (*.txt)|*.txt" +                     // 1
+                "|Все файлы (*.*)|*.*";                               // 6 
+            SaveFileDlg.FilterIndex = 1;
+            SaveFileDlg.FileName = this.FileName;
+            //OpenFileDlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            if(SaveFileDlg.ShowDialog() == DialogResult.OK) {
+                File.WriteAllText(SaveFileDlg.FileName, TextBoxMain.Text);
+                FileName = SaveFileDlg.FileName;
+                TextBoxMain.Modified = false;
+                SetFileNameStatus(FileName, TextBoxMain.Modified);
+            }
         }
 
         private void miFilePrint_Click(object sender, EventArgs e) {
@@ -116,9 +156,40 @@ namespace C320_Notepad {
 
         private void miFileExit_Click(object sender, EventArgs e) {
             if(TextBoxMain.Modified) {
-                // добавить диалог сохранения измсенений в файле
+                DialogResult LResult = MessageBox.Show(
+                    "Сохранить изменения в файле \""+FileName+"\"?"
+                   ,"Выход из программы"
+                   , MessageBoxButtons.YesNoCancel
+                   ,MessageBoxIcon.Question);
+                if(LResult == DialogResult.Yes) {
+                    miFileSave_Click(sender, e);
+                } else if(LResult == DialogResult.Cancel) {
+                    return;
+                }
             }
             Close();
+        }
+
+        private void TextBoxMain_TextChanged(object sender, EventArgs e) {
+            SetFileNameStatus(FileName, TextBoxMain.Modified);
+        }
+
+        private void TextBoxMain_KeyUp(object sender, KeyEventArgs e) {
+        }
+
+        private void TextBoxMain_KeyPress(object sender, KeyPressEventArgs e) {
+            if(e.KeyChar == (char)Keys.Insert) {
+                StatusLabelKeyIns.Text = "  ";
+            } else {
+                StatusLabelKeyIns.Text = "INS";
+            }
+        }
+
+        private void miViewColor_Click(object sender, EventArgs e) {
+            ColorDlg.Color = TextBoxMain.BackColor;
+            if(ColorDlg.ShowDialog() == DialogResult.OK) {
+                TextBoxMain.BackColor = ColorDlg.Color;
+            }
         }
     }
 }
